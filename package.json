@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "repository": "git@github.com:ghivert/containment-game.js.git",
-  "author": "Guillaume Hivert <hivert.is.coming@gmail.com>",
-  "license": "MIT"
+  "authors": [
+    "Guillaume Hivert <hivert.is.coming@gmail.com>",
+    "Arthur Escriou <arthurescriou@gmail.com>"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "nodemon": "^2.0.2",
+    "prettier": "^2.0.2"
+  }
 }
