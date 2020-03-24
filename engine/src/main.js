@@ -36,22 +36,22 @@ const engine = new Engine({
     {
       id: '56142e68-5e47-4c8e-83dd-4451c08011ae',
       team: 'red',
-      speaker: true,
+      spy: true,
     },
     {
       id: '8e87050f-ffa4-4b93-bf55-1bda8de98753',
       team: 'blue',
-      speaker: true,
+      spy: true,
     },
     {
       id: '56142e68-5e47-4c8e-83dd-4451c08011ae',
       team: 'red',
-      speaker: false,
+      spy: false,
     },
     {
       id: '8e87050f-ffa4-4b93-bf55-1bda8de98753',
       team: 'blue',
-      speaker: false,
+      spy: false,
     },
   ],
 })
