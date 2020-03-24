@@ -10,6 +10,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     name: 'default',
+    roomId: null,
     board: {
       cards: [
         'éléphant',
@@ -50,8 +51,18 @@ export default new Vuex.Store({
       state.name = name
       router.push('/room')
     },
+    enterRoom(state, rid) {
+      state.roomId = rid
+    }
   },
   actions: {
+    leaveRoom(store, rid) {
+      if (rid) {
+        socket.emit('leave-room', rid)
+      } else {
+        socket.emit('leave-room', store.state.roomId)
+      }
+    },
     getRooms(store) {
       socket.emit('get-rooms')
     },
@@ -61,12 +72,14 @@ export default new Vuex.Store({
         name: store.state.name
       })
       router.push('/game/' + id)
+      store.commit('enterRoom', id)
     },
     createRoom(store) {
       socket.emit('create-room', store.state.name)
       socket.on('create-room', (rid) => {
         socket.off('create-room')
         router.push('/game/' + rid)
+        store.commit('enterRoom', rid)
       })
     }
   },

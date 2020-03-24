@@ -21,9 +21,15 @@ import {
 } from '@/services/socket.io'
 export default {
   mounted() {
-
+    console.log(this.id)
+  },
+  beforeDestroy() {
+    this.$store.dispatch('leaveRoom')
   },
   computed: {
+    id() {
+      return this.$route.params.id
+    },
     board() {
       return this.$store.state.board
     },
