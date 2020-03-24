@@ -100,7 +100,7 @@ io.on('connection', function(socket) {
 
   socket.on('get-rooms', () => dispatchRooms(socket))
 
-  // socket.on('disconnect', leaveRoom({socket, io}))
+  socket.on('disconnect', leaveRoom({socket, io}))
 
   // socket.on('peer-msg', function(data) {
   //   console.log('Message from peer: %s', data);
