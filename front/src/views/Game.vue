@@ -2,6 +2,7 @@
   <div class="layout">
     <div class="nav">
       Navbar
+      Room id: {{$route.params.id}}
     </div>
     <aside class="sidebar">
       Sidebar
@@ -15,7 +16,13 @@
 </template>
 
 <script>
+import {
+  socket
+} from '@/services/socket.io'
 export default {
+  mounted() {
+
+  },
   computed: {
     board() {
       return this.$store.state.board

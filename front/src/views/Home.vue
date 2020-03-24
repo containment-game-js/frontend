@@ -3,7 +3,6 @@
     <form class="" @submit="submit">
       <h1>Enter your name</h1>
       <input type="text" v-model="name">
-      {{name}}
       <input type="submit" value="Submit">
     </form>
   </div>

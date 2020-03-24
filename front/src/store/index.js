@@ -1,44 +1,47 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '@/router'
+import {
+  socket
+} from '@/services/socket.io'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    name: '',
+    name: 'default',
     board: {
       cards: [
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
-        'cheval',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'hippopotame',
+        'louise',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
+        'éléphant',
       ],
     },
   },
@@ -49,9 +52,23 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    joinRoom(store, id) {
-      router.push('/game')
+    getRooms(store) {
+      socket.emit('get-rooms')
     },
+    joinRoom(store, id) {
+      socket.emit('enter-room', {
+        rid: id,
+        name: store.state.name
+      })
+      router.push('/game/' + id)
+    },
+    createRoom(store) {
+      socket.emit('create-room', store.state.name)
+      socket.on('create-room', (rid) => {
+        socket.off('create-room')
+        router.push('/game/' + rid)
+      })
+    }
   },
   modules: {},
 })
