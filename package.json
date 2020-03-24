@@ -1,0 +1,8 @@
+{
+  "name": "containment-game.js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:ghivert/containment-game.js.git",
+  "author": "Guillaume Hivert <hivert.is.coming@gmail.com>",
+  "license": "MIT"
+}
