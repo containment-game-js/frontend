@@ -8,7 +8,7 @@
       Sidebar
     </aside>
     <div class="board">
-      <div class="card" v-for="card in cards" :key="card">
+      <div class="card" v-for="(card,i) in cards" :key="card+i">
         {{ card }}
       </div>
     </div>

@@ -20,53 +20,65 @@ const roomsToString = () => JSON.stringify(Object.values(rooms).map(room => ({
 })))
 
 const createRoom = ({socket, io}) => (name) => {
-  const rid = uuidv4()
-  const roomName = faker.hacker.noun()
-  rooms[rid] = {
-    id: rid,
-    host: socket,
-    name: roomName,
-    players: [
-      {
-        socket,
-        name
-      }
-    ]
+  try {
+    const rid = uuidv4()
+    const roomName = faker.hacker.noun()
+    rooms[rid] = {
+      id: rid,
+      host: socket,
+      name: roomName,
+      players: [
+        {
+          socket,
+          name
+        }
+      ]
+    }
+    dispatchRooms(io)
+    socket.emit('create-room', rid)
+  } catch (e) {
+    console.error(e)
   }
-  dispatchRooms(io)
-  socket.emit('create-room', rid)
 }
 
 const enterRoom = ({socket, io}) => ({rid, name}) => {
-  if (!(rooms[rid].players.find(p => p.socket === socket))) {
-    rooms[rid].players.push({socket, name})
-    dispatchRooms(io)
+  try {
+    if (!(rooms[rid].players.find(p => p.socket === socket))) {
+      rooms[rid].players.push({socket, name})
+      dispatchRooms(io)
+    }
+  } catch (e) {
+    console.error(e)
   }
 }
 
 const leaveRoom = ({socket, io}) => (rid) => {
-  if (rid) {
-    if (rooms[rid].players.find(p => p.socket === socket)) {
-      rooms[rid].players = rooms[rid].players.filter(p => p.socket !== socket)
-      if (rooms[rid].host === socket) {
-        delete rooms[rid]
-      }
-      dispatchRooms(io)
-    }
-  } else {
-    let changed = false
-    Object.values(rooms).forEach(room => {
-      if (room.players.find(p => p.socket === socket)) {
-        changed = true
-        room.players = room.players.filter(p => p.socket !== socket)
-        if (room.host === socket) {
-          delete rooms[room.id]
+  try {
+    if (rid) {
+      if (rooms[rid].players.find(p => p.socket === socket)) {
+        rooms[rid].players = rooms[rid].players.filter(p => p.socket !== socket)
+        if (rooms[rid].host === socket) {
+          delete rooms[rid]
         }
+        dispatchRooms(io)
       }
-    })
-    if (changed) {
-      dispatchRooms(io)
+    } else {
+      let changed = false
+      Object.values(rooms).forEach(room => {
+        if (room.players.find(p => p.socket === socket)) {
+          changed = true
+          room.players = room.players.filter(p => p.socket !== socket)
+          if (room.host === socket) {
+            delete rooms[room.id]
+          }
+        }
+      })
+      if (changed) {
+        dispatchRooms(io)
+      }
     }
+  } catch (e) {
+    console.error(e)
   }
 }
 
