@@ -170,13 +170,35 @@ const guess = (state, player, { cardNumber }) => {
   return state
 }
 
-const actions = {
-  guess,
+const pass = (state, player) => {
+  if (canPass(state, player)) {
+    return { ...state, turn: otherColor(player.team), spyToTalk: true }
+  }
+  return state
+}
+
+const canTalk = (state, player) => {
+  const { spyToTalk, turn } = state
+  const { turn, team } = player
+  return spyToTalk && spy && turn === team
+}
+
+const talk = (state, player, { hint, numberToGuess }) => {
+  if (canTalk(state, player)) {
+    return {
+      ...state,
+      spyToTalk: false,
+      numberToGuess: numberToGuess + 1,
+      hint,
+      canPass: false,
+    }
+  }
+  return state
 }
 
 const CodeNamesEngine = (players) => {
   const state = init()
-  return Engine({ state, players, filter, actions })
+  return Engine({ state, players, filter, actions: { guess, pass, talk } })
 }
 
 export { CodeNamesEngine }
