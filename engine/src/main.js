@@ -1,28 +1,14 @@
-// - Moteur de jeu (pure js)
-// - Un front (vue.js)
-// - Un serveur qui synchronise socket.io p2p (broker)
-// - Un client crée la partie
-//
-// # Moteur
-//
-// - Récolte les évènements
-//     - Chaque joueur autorisé qui joue ce tour-ci envoie sa requête dans le temps imparti
-//     - Si il envoit pas, coup par défaut (à définir)
-// - Résout les évènements
-//     - Pour chaque évènement, run dans un ordre précis
-//     - Broadcast nouvel état
+const Engine = params => {
+  return new Engine_(params)
+}
 
-// front
-// const render : substate => html
-
-// Moteur
-// const stateToUserState: (uid, state) => JSON(subState)
-class Engine {
+class Engine_ {
   constructor(options) {
-    const { players, state, actions } = options
+    const { players, state, actions, filter } = options
     this.players = players
     this.state = state
     this.actions = actions
+    this.getState = pid => filter(this.state, pid)
   }
 
   run(action, pid, params) {
@@ -38,19 +24,14 @@ class Engine {
   }
 }
 
-class CodeNamesEngine extends Engine {
-  constructor() {
-    this.state = {}
-  }
+export { Engine }
 
-  actions: {}
-}
-
-const engine = new CodeNamesEngine({
+const engine = new Engine({
+  filter: (state, player) => ({ ...state }),
   actions: {
     guess(state, player, params) {},
   },
-
+  state: init(),
   players: [
     {
       id: '56142e68-5e47-4c8e-83dd-4451c08011ae',
@@ -73,8 +54,4 @@ const engine = new CodeNamesEngine({
       speaker: false,
     },
   ],
-
-  getState(state, player) {
-    return { ...state }
-  },
 })
