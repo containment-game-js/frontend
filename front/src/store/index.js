@@ -58,9 +58,15 @@ export default new Vuex.Store({
   actions: {
     leaveRoom(store, rid) {
       if (rid) {
-        socket.emit('leave-room', rid)
+        socket.emit('leave-room', {
+          name: store.state.name,
+          rid
+        })
       } else {
-        socket.emit('leave-room', store.state.roomId)
+        socket.emit('leave-room', {
+          name: store.state.name,
+          rid: store.state.roomId
+        })
       }
     },
     getRooms(store) {

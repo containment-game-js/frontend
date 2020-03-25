@@ -6,9 +6,12 @@
     </div>
     <aside class="sidebar">
       Sidebar
+      <div class="player" v-for="p in players" v-bind:key="p.id">
+        {{p.name}}
+      </div>
     </aside>
     <div class="board">
-      <div class="card" v-for="(card,i) in cards" :key="card+i">
+      <div class="card" v-for="(card,i) in cards" :key="card+i" @click="action({name: card})">
         {{ card }}
       </div>
     </div>
@@ -17,14 +20,32 @@
 
 <script>
 import {
-  socket
+  socket,
+  reconnect
 } from '@/services/socket.io'
 export default {
   mounted() {
-    console.log(this.id)
+    const zis = this
+    socket.on('action', (val) => console.log('action', val))
+    socket.on('users', (users) => {
+      zis.players = users
+    })
+    socket.on('go-private', () => {
+      console.log('private')
+      socket.upgrade()
+    });
   },
   beforeDestroy() {
+    socket.off('action')
+    socket.off('users')
+    socket.off('go-private')
+    reconnect()
     this.$store.dispatch('leaveRoom')
+  },
+  data() {
+    return {
+      players: []
+    }
   },
   computed: {
     id() {
@@ -35,6 +56,12 @@ export default {
     },
     cards() {
       return this.board.cards
+    }
+  },
+  methods: {
+    action(params) {
+      console.log(params)
+      socket.emit('action', params)
     }
   }
 }

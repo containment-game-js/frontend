@@ -2,8 +2,8 @@
   <div class="" v-if="!modal">
     <h2>Create room</h2>
     <button type="button" @click="create">Create room</button>
-    <h2>Join room</h2>
-    <button type="button" @click="join">Join room</button>
+    <!-- <h2>Join room</h2>
+    <button type="button" @click="join">Join room</button> -->
     <div class="rooms">
       <label v-bind:key="room.id" v-for="room in rooms" class="room" @click="enterRoom(room)">
         {{room.name}}
@@ -29,25 +29,23 @@ import {
 export default {
   mounted() {
     const zis = this
-    this.sRoom = socket.on('rooms', (rooms) => {
+    socket.on('rooms', (rooms) => {
       zis.updateRooms(rooms)
     })
     this.$store.dispatch('getRooms')
   },
   beforeDestroy() {
-    this.sRoom.off('rooms')
+    socket.off('rooms')
   },
   data() {
     return {
       modal: false,
       id: '',
       rooms: [],
-      sRoom: null,
     }
   },
   methods: {
     updateRooms(rooms) {
-      console.log(rooms)
       this.rooms = rooms
     },
     create() {
