@@ -8,7 +8,6 @@ let socket = connect()
 const reconnect = () => {
   socket.disconnect()
   socket = connect()
-  console.log(socket)
 }
 
 export {
