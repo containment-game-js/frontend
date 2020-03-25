@@ -74,7 +74,7 @@ const enterRoom = ({socket, io}) => ({rid, name}) => {
 const leaveRoom = ({socket, io}) => ({name, rid}) => {
   try {
     if (rid) {
-      if (rooms[rid].players.find(p => p.socket === socket)) {
+      if (rooms[rid] && rooms[rid].players.find(p => p.socket === socket)) {
         rooms[rid].players = rooms[rid].players.filter(p => p.socket !== socket)
         if (rooms[rid].host === socket) {
           delete rooms[rid]
