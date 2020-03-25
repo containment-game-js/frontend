@@ -94,7 +94,7 @@ export default {
   grid-area: board;
   background: #eee;
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 1fr);
   grid-gap: 20px;
   padding: 20px;
