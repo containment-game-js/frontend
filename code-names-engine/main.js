@@ -120,7 +120,7 @@ const opponentAnswer = (state, player, cardNumber) => {
   }
 }
 
-const murdererAnswer = (state, player, cardNumber) => {
+const murdererAnswer = (state, player) => {
   const otherTeam = otherColor(player.team)
   return {
     ...state,
@@ -162,7 +162,7 @@ const guess = (state, player, { cardNumber }) => {
     } else if (state[otherTeam].includes(cardNumber)) {
       return opponentAnswer(state, player, cardNumber)
     } else if (cardNumber === state.murderer) {
-      return murdererAnswer(state, player, cardNumber)
+      return murdererAnswer(state, player)
     } else {
       return neutralAnswer(state, player, cardNumber)
     }
