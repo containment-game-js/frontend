@@ -1,11 +1,6 @@
 import { Engine } from './engine'
 import * as Dictionnary from './dictionary'
-
-const getRandomInt = (min, max) => {
-  min = Math.ceil(min)
-  max = Math.floor(max)
-  return Math.floor(Math.random() * (max - min)) + min
-}
+import {getRandomInt} from './math'
 
 const chooseWhoBegin = () => {
   if (Math.random() < 0.5) {

@@ -27,19 +27,20 @@ export default new Vuex.Store({
         'éléphant',
         'hippopotame',
         'louise',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
+        'hippopotame',
+        'hippopotame',
+        'hippopotame',
+        'hippopotame',
+        'hippopotame',
+        'hippopotame',
+        'hippopotame',
+        'hippopotame',
+        'hippopotame',
+        'hippopotame',
+        'hippopotame',
       ],
     },
+    game: null
   },
   mutations: {
     updateName(state, name) {
@@ -48,9 +49,18 @@ export default new Vuex.Store({
     },
     enterRoom(state, rid) {
       state.roomId = rid
+    },
+    initGame(state) {
+
     }
   },
   actions: {
+    sendGameState(store) {
+      if (store.state.game) {
+
+        // socket.emit('game', )
+      }
+    },
     leaveRoom(store, rid) {
       if (rid) {
         socket.emit('leave-room', {

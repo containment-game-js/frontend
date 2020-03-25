@@ -36,6 +36,7 @@ export default {
     });
   },
   beforeDestroy() {
+    socket.emit('users', this.players.filter(p => p.id != socket.id))
     socket.off('action')
     socket.off('users')
     socket.off('go-private')
