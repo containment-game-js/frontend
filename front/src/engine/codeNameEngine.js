@@ -1,5 +1,5 @@
-import { Engine } from 'engine'
-import * as Dictionnary from 'dictionary'
+import { Engine } from './engine'
+import * as Dictionnary from './dictionary'
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min)
