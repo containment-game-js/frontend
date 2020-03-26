@@ -2,7 +2,7 @@ import io from 'socket.io-client'
 import P2P from 'socket.io-p2p'
 
 const connect = () => {
-  return new P2P(io('http://localhost:3030'), { autoUpgrade: false })
+  return new P2P(io('https://containment-game.herokuapp.com/'), { autoUpgrade: false })
 }
 
 let socket = connect()
