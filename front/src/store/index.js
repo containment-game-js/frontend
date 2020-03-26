@@ -36,9 +36,11 @@ const blue = [26, 16, 13, 4, 21, 29, 2, 14, 9]
 const red = [27, 8, 17, 18, 24, 28, 15, 11]
 const murderer = 10
 
+const username = localStorage.getItem('username')
+
 export default new Vuex.Store({
   state: {
-    name: 'default',
+    name: username,
     roomId: null,
     board: {
       cards,
@@ -54,7 +56,7 @@ export default new Vuex.Store({
   mutations: {
     updateName(state, name) {
       state.name = name
-      router.push('/room')
+      localStorage.setItem('username', name)
     },
     enterRoom(state, rid) {
       state.roomId = rid

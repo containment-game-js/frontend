@@ -3,7 +3,7 @@
     <div class="nav">Navbar Room id: {{ $route.params.id }}</div>
     <aside class="sidebar">
       Sidebar
-      <div class="player" v-for="p in players" v-bind:key="p.id">
+      <div class="player" v-for="p in players" :key="p.id">
         {{ p.name }}
       </div>
     </aside>
@@ -24,10 +24,9 @@
 import { socket, reconnect } from '@/services/socket.io'
 export default {
   mounted() {
-    const zis = this
     socket.on('action', val => console.log('action', val))
     socket.on('users', users => {
-      zis.players = users
+      this.players = users
     })
     socket.on('go-private', () => {
       console.log('private')
@@ -35,10 +34,8 @@ export default {
     })
   },
   beforeDestroy() {
-    socket.emit(
-      'users',
-      this.players.filter(p => p.id != socket.id)
-    )
+    const remainingUsers = this.players.filter(p => p.id != socket.id)
+    socket.emit('users', remainingUsers)
     socket.off('action')
     socket.off('users')
     socket.off('go-private')
