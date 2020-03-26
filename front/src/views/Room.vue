@@ -5,10 +5,15 @@
     <!-- <h2>Join room</h2>
     <button type="button" @click="join">Join room</button> -->
     <div class="rooms">
-      <label v-bind:key="room.id" v-for="room in rooms" class="room" @click="enterRoom(room)">
-        {{room.name}}
-        <div v-bind:key="player.name+room.id" v-for="player in room.players">
-          {{player.name}}
+      <label
+        v-bind:key="room.id"
+        v-for="room in rooms"
+        class="room"
+        @click="enterRoom(room)"
+      >
+        {{ room.name }}
+        <div v-bind:key="player.name + room.id" v-for="player in room.players">
+          {{ player.name }}
         </div>
       </label>
     </div>
@@ -16,20 +21,18 @@
   <div class="" v-else>
     <form @submit="submit">
       <h2>Enter id</h2>
-      <input type="text" v-model="id">
-      <input type="submit" value="Join">
+      <input type="text" v-model="id" />
+      <input type="submit" value="Join" />
     </form>
   </div>
 </template>
 
 <script>
-import {
-  socket
-} from '@/services/socket.io'
+import { socket } from '@/services/socket.io'
 export default {
   mounted() {
     const zis = this
-    socket.on('rooms', (rooms) => {
+    socket.on('rooms', rooms => {
       zis.updateRooms(rooms)
     })
     this.$store.dispatch('getRooms')
@@ -62,8 +65,8 @@ export default {
     submit(event) {
       event.preventDefault()
       this.$store.dispatch('joinRoom', this.id)
-    }
-  }
+    },
+  },
 }
 </script>
 

@@ -2,8 +2,8 @@
   <div class="">
     <form class="" @submit="submit">
       <h1>Enter your name</h1>
-      <input type="text" v-model="name">
-      <input type="submit" value="Submit">
+      <input type="text" v-model="name" />
+      <input type="submit" value="Submit" />
     </form>
   </div>
 </template>
@@ -19,10 +19,9 @@ export default {
     submit(event) {
       event.preventDefault()
       this.$store.commit('updateName', this.name)
-    }
+    },
   },
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

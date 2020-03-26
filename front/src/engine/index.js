@@ -1,11 +1,4 @@
-import {
-  Engine
-} from './engine'
-import {
-  CodeNamesEngine
-} from './codeNamesEngine'
+import { Engine } from './engine'
+import { CodeNamesEngine } from './codeNamesEngine'
 
-export {
-  Engine,
-  CodeNamesEngine
-}
+export { Engine, CodeNamesEngine }

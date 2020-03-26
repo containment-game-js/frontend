@@ -1,6 +1,6 @@
 import { Engine } from './engine'
 import * as Dictionnary from './dictionary'
-import {getRandomInt} from './math'
+import { getRandomInt } from './math'
 
 const chooseWhoBegin = () => {
   if (Math.random() < 0.5) {
@@ -73,7 +73,7 @@ const filter = (state, player) => {
   }
 }
 
-const otherColor = (color) => {
+const otherColor = color => {
   if (color === 'blue') {
     return 'red'
   } else {
@@ -81,7 +81,7 @@ const otherColor = (color) => {
   }
 }
 
-const selectFoundByColor = (color) => {
+const selectFoundByColor = color => {
   if (color === 'blue') {
     return 'foundBlue'
   } else {
@@ -142,7 +142,7 @@ const isFound = (state, cardNumber) => {
   )
 }
 
-const canGuess = (state, player) => {
+const canGuess = (state, player, cardNumber) => {
   const { spyToTalk, turn } = state
   const { spy, team } = player
   const found = isFound(state, cardNumber)
@@ -150,7 +150,7 @@ const canGuess = (state, player) => {
 }
 
 const guess = (state, player, { cardNumber }) => {
-  if (canGuess(state, player)) {
+  if (canGuess(state, player, cardNumber)) {
     const otherTeam = otherColor(player.team)
     if (state[player.team].includes(cardNumber)) {
       return correctAnswer(state, player, cardNumber)
@@ -165,6 +165,12 @@ const guess = (state, player, { cardNumber }) => {
   return state
 }
 
+const canPass = (state, player) => {
+  const { turn, canPass } = state
+  const { team, spy } = player
+  return !spy && turn === team && canPass
+}
+
 const pass = (state, player) => {
   if (canPass(state, player)) {
     return { ...state, turn: otherColor(player.team), spyToTalk: true }
@@ -174,7 +180,7 @@ const pass = (state, player) => {
 
 const canTalk = (state, player) => {
   const { spyToTalk, turn } = state
-  const { turn, team } = player
+  const { spy, team } = player
   return spyToTalk && spy && turn === team
 }
 
@@ -191,7 +197,7 @@ const talk = (state, player, { hint, numberToGuess }) => {
   return state
 }
 
-const CodeNamesEngine = (players) => {
+const CodeNamesEngine = players => {
   const state = init()
   return Engine({ state, players, filter, actions: { guess, pass, talk } })
 }

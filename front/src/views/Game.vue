@@ -78,7 +78,6 @@ export default {
       return this.board.cards
     },
   },
-  methods: {},
 }
 </script>
 
