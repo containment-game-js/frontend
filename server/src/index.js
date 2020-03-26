@@ -23,7 +23,7 @@ const roomsToString = () =>
   JSON.stringify(
     Object.values(rooms).map((room) => ({
       ...room,
-      host: null,
+      host: host.id,
       players: room.players.map((player) => ({ name: player.name })),
     }))
   )
@@ -129,7 +129,7 @@ const dispatchRooms = (socket) =>
     'rooms',
     Object.values(rooms).map((room) => ({
       ...room,
-      host: null,
+      host: host.id,
       players: room.players.map((player) => ({ name: player.name })),
     }))
   )
