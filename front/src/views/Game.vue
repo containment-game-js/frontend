@@ -1,42 +1,44 @@
 <template lang="html">
   <div class="layout">
-    <div class="nav">
-      Navbar
-      Room id: {{$route.params.id}}
-    </div>
+    <div class="nav">Navbar Room id: {{ $route.params.id }}</div>
     <aside class="sidebar">
       Sidebar
       <div class="player" v-for="p in players" v-bind:key="p.id">
-        {{p.name}}
+        {{ p.name }}
       </div>
     </aside>
     <div class="board">
-      <div class="card" v-for="(card,i) in cards" :key="card+i" @click="action({name: card})">
-        {{ card }}
+      <div
+        v-for="(card, index) in board.cards"
+        :class="`card ${correctCardColor(index)}`"
+        :key="card"
+        @click="action({ name: card })"
+      >
+        <div>{{ card }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {
-  socket,
-  reconnect
-} from '@/services/socket.io'
+import { socket, reconnect } from '@/services/socket.io'
 export default {
   mounted() {
     const zis = this
-    socket.on('action', (val) => console.log('action', val))
-    socket.on('users', (users) => {
+    socket.on('action', val => console.log('action', val))
+    socket.on('users', users => {
       zis.players = users
     })
     socket.on('go-private', () => {
       console.log('private')
       socket.upgrade()
-    });
+    })
   },
   beforeDestroy() {
-    socket.emit('users', this.players.filter(p => p.id != socket.id))
+    socket.emit(
+      'users',
+      this.players.filter(p => p.id != socket.id)
+    )
     socket.off('action')
     socket.off('users')
     socket.off('go-private')
@@ -45,8 +47,25 @@ export default {
   },
   data() {
     return {
-      players: []
+      players: [],
     }
+  },
+  methods: {
+    correctCardColor(index) {
+      if (this.board.red.includes(index)) {
+        return 'red'
+      } else if (this.board.blue.includes(index)) {
+        return 'blue'
+      } else if (this.board.murderer === index) {
+        return 'black'
+      } else {
+        return 'brown'
+      }
+    },
+    action(params) {
+      console.log(params)
+      socket.emit('action', params)
+    },
   },
   computed: {
     id() {
@@ -57,14 +76,9 @@ export default {
     },
     cards() {
       return this.board.cards
-    }
+    },
   },
-  methods: {
-    action(params) {
-      console.log(params)
-      socket.emit('action', params)
-    }
-  }
+  methods: {},
 }
 </script>
 
@@ -73,8 +87,8 @@ export default {
   height: 100vh;
   display: grid;
   grid-template-areas:
-    "nav nav"
-    "sidebar board";
+    'nav nav'
+    'sidebar board';
   grid-template-rows: auto 1fr;
   grid-template-columns: auto 1fr;
 }
@@ -102,12 +116,39 @@ export default {
 }
 
 .card {
+  border-radius: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  box-shadow: #d9d9d9 0px 0px 5px 1px;
+  padding: 15px;
+}
+
+.red {
+  background-color: rgb(255, 68, 68);
+}
+
+.blue {
+  background-color: rgb(94, 146, 247);
+}
+
+.brown {
+  background-color: rgb(203, 180, 153);
+}
+
+.black {
+  background-color: rgb(75, 75, 75);
+}
+
+.card div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #faecca;
+  background: center / cover no-repeat url('../assets/clear.jpg');
   border-radius: 5px;
-  box-shadow: #e6e6e6 0px 0px 3px 2px;
   text-transform: uppercase;
+  height: 100%;
+  width: 100%;
 }
 </style>

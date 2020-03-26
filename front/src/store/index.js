@@ -1,46 +1,55 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '@/router'
-import {
-  socket
-} from '@/services/socket.io'
+import { socket } from '@/services/socket.io'
 
 Vue.use(Vuex)
+
+const cards = [
+  'éléphant',
+  'éléphant',
+  'éléphant',
+  'éléphant',
+  'éléphant',
+  'éléphant',
+  'éléphant',
+  'éléphant',
+  'éléphant',
+  'éléphant',
+  'éléphant',
+  'hippopotame',
+  'louise',
+  'hippopotame',
+  'hippopotame',
+  'hippopotame',
+  'hippopotame',
+  'hippopotame',
+  'hippopotame',
+  'hippopotame',
+  'hippopotame',
+  'hippopotame',
+  'hippopotame',
+  'hippopotame',
+]
+
+const blue = [26, 16, 13, 4, 21, 29, 2, 14, 9]
+const red = [27, 8, 17, 18, 24, 28, 15, 11]
+const murderer = 10
 
 export default new Vuex.Store({
   state: {
     name: 'default',
     roomId: null,
     board: {
-      cards: [
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'éléphant',
-        'hippopotame',
-        'louise',
-        'hippopotame',
-        'hippopotame',
-        'hippopotame',
-        'hippopotame',
-        'hippopotame',
-        'hippopotame',
-        'hippopotame',
-        'hippopotame',
-        'hippopotame',
-        'hippopotame',
-        'hippopotame',
-      ],
+      cards,
+      blue,
+      red,
+      murderer,
+      foundBlue: [],
+      foundRed: [],
+      foundNeutral: [],
     },
-    game: null
+    game: null,
   },
   mutations: {
     updateName(state, name) {
@@ -50,14 +59,11 @@ export default new Vuex.Store({
     enterRoom(state, rid) {
       state.roomId = rid
     },
-    initGame(state) {
-
-    }
+    initGame(state) {},
   },
   actions: {
     sendGameState(store) {
       if (store.state.game) {
-
         // socket.emit('game', )
       }
     },
@@ -65,12 +71,12 @@ export default new Vuex.Store({
       if (rid) {
         socket.emit('leave-room', {
           name: store.state.name,
-          rid
+          rid,
         })
       } else {
         socket.emit('leave-room', {
           name: store.state.name,
-          rid: store.state.roomId
+          rid: store.state.roomId,
         })
       }
     },
@@ -80,19 +86,19 @@ export default new Vuex.Store({
     joinRoom(store, id) {
       socket.emit('enter-room', {
         rid: id,
-        name: store.state.name
+        name: store.state.name,
       })
       router.push('/game/' + id)
       store.commit('enterRoom', id)
     },
     createRoom(store) {
       socket.emit('create-room', store.state.name)
-      socket.on('create-room', (rid) => {
+      socket.on('create-room', rid => {
         socket.off('create-room')
         router.push('/game/' + rid)
         store.commit('enterRoom', rid)
       })
-    }
+    },
   },
   modules: {},
 })
