@@ -90,14 +90,14 @@ export default new Vuex.Store({
         rid: id,
         name: store.state.name,
       })
-      router.push('/game/' + id)
+      router.push(`preparation/${id}`)
       store.commit('enterRoom', id)
     },
-    createRoom(store) {
+    createRoom(store, privateRoom) {
       socket.emit('create-room', store.state.name)
       socket.on('create-room', rid => {
         socket.off('create-room')
-        router.push('/game/' + rid)
+        router.push(`preparation/${rid}`)
         store.commit('enterRoom', rid)
       })
     },

@@ -1,15 +1,19 @@
 <template lang="html">
-  <div class="">
-    <form class="" @submit="submit">
-      <h1>Enter your name</h1>
-      <input
-        type="text"
-        :value="$store.state.name"
-        @input="updateName($event.target.value)"
-      />
-      <input type="submit" value="Submit" />
-    </form>
-    <h2>Create Room</h2>
+  <main class="main">
+    <h1>Welcome to your game of containment</h1>
+    <h2>Please, ensure your name is correct or enter it.</h2>
+    <h3>Click on it to edit!</h3>
+    <div
+      ref="editable"
+      contenteditable
+      @input="updateName($event.target.innerText)"
+    />
+    <h2>Rooms</h2>
+    <row>
+      <h3>Create Room</h3>
+      <toggler label="Private" v-model="privateRoom" />
+    </row>
+
     <button type="button" @click="create">Create room</button>
     <h2>Join Room</h2>
     <button type="button" @click="join">Join room</button>
@@ -18,7 +22,6 @@
         v-bind:key="room.id"
         v-for="room in rooms"
         class="room"
-        :test="log(room)"
         @click="enterRoom(room)"
       >
         {{ room.name }}
@@ -27,17 +30,24 @@
         </div>
       </label>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
+import Row from '@/components/Row.vue'
+import Toggler from '@/components/Toggler.vue'
 import { socket } from '@/services/socket.io'
 export default {
+  components: {
+    Row,
+    Toggler,
+  },
   mounted() {
     socket.on('rooms', rooms => {
       this.updateRooms(rooms)
     })
     this.$store.dispatch('getRooms')
+    this.$refs.editable.innerText = this.$store.state.name
   },
   beforeDestroy() {
     socket.off('rooms')
@@ -47,21 +57,19 @@ export default {
       modal: false,
       id: '',
       rooms: [],
+      privateRoom: false,
     }
   },
   methods: {
     updateName(value) {
       this.$store.commit('updateName', value)
     },
-    log(...params) {
-      console.log(...params)
-    },
     updateRooms(rooms) {
       this.rooms = rooms
     },
     create() {
       event.preventDefault()
-      this.$store.dispatch('createRoom')
+      this.$store.dispatch('createRoom', this.privateRoom)
     },
     enterRoom(room) {
       console.log(room)
@@ -78,4 +86,18 @@ export default {
 }
 </script>
 
-<style lang="css" scoped></style>
+<style lang="css" scoped>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+.main {
+  max-width: 700px;
+  margin: auto;
+}
+</style>
