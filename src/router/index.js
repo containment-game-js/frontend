@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import Game from '@/views/Game.vue'
+import Preparation from '@/views/Preparation.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,12 @@ const routes = [
     path: '/game/:id',
     name: 'Game',
     component: Game,
+  },
+  {
+    path: '/preparation/:rid',
+    name: 'Preparation',
+    component: Preparation,
+    props: true,
   },
 ]
 

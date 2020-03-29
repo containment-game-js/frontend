@@ -58,7 +58,7 @@ export default new Vuex.Store({
       state.name = name
       localStorage.setItem('username', name)
     },
-    enterRoom(state, rid) {
+    enterPreparation(state, rid) {
       state.roomId = rid
     },
     initGame(state) {},
@@ -86,19 +86,20 @@ export default new Vuex.Store({
       socket.emit('get-rooms')
     },
     joinRoom(store, id) {
-      socket.emit('enter-room', {
-        rid: id,
-        name: store.state.name,
-      })
+      const { name } = store.state
+      socket.emit('enter-room', { rid: id, name })
       router.push(`preparation/${id}`)
-      store.commit('enterRoom', id)
+      store.commit('enterPreparation', id)
     },
     createRoom(store, privateRoom) {
-      socket.emit('create-room', store.state.name)
-      socket.on('create-room', rid => {
-        socket.off('create-room')
+      const { name } = store.state
+      console.log('there');
+      socket.emit('create-room', { name, privateRoom })
+      console.log('here');
+      socket.on('created-room', rid => {
+        socket.off('created-room')
         router.push(`preparation/${rid}`)
-        store.commit('enterRoom', rid)
+        store.commit('enterPreparation', rid)
       })
     },
   },

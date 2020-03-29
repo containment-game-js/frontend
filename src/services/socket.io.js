@@ -1,8 +1,19 @@
 import io from 'socket.io-client'
 import P2P from 'socket.io-p2p'
 
+const connectionURL = () => {
+  if (process.env.NODE_ENV === 'development') {
+    return 'http://localhost:3030/'
+  } else {
+    return 'https://containment-game.herokuapp.com/'
+  }
+}
+
 const connect = () => {
-  return new P2P(io('https://containment-game.herokuapp.com/'), { autoUpgrade: false })
+  const url = connectionURL()
+  const socket = new P2P(io(url, { autoUpgrade: false }))
+  socket.on('peer-msg', console.log)
+  return socket
 }
 
 let socket = connect()
