@@ -24,13 +24,9 @@
 import { socket, reconnect } from '@/services/socket.io'
 export default {
   mounted() {
-    socket.on('action', val => console.log('action', val))
+    // socket.on('action', val => console.log('action', val))
     socket.on('users', users => {
       this.players = users
-    })
-    socket.on('go-private', () => {
-      console.log('private')
-      socket.upgrade()
     })
   },
   beforeDestroy() {
@@ -60,7 +56,6 @@ export default {
       }
     },
     action(params) {
-      console.log(params)
       socket.emit('action', params)
     },
   },
