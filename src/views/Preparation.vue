@@ -172,6 +172,7 @@ export default {
     'red-title neutral-title blue-title'
     'reds      neutrals      blue';
   grid-template-rows: auto minmax(200px, auto);
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .red {
