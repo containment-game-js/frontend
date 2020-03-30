@@ -73,9 +73,9 @@ export default {
   },
   data() {
     const roomInfo = { players: [] }
-    const state = { red: [], blue: [] }
+    const teams = { red: [], blue: [] }
     const spies = { red: null, blue: null }
-    return { roomInfo, roomFound: false, state, spies }
+    return { roomInfo, roomFound: false, teams, spies }
   },
   mounted: async function () {
     const { rid } = this
@@ -84,23 +84,25 @@ export default {
     if (response.status === 200) {
       const value = await response.json()
       this.roomInfo = value
-      socket.on('users', users => {
-        this.roomInfo.players = users
-        this.updateUsersTeam()
-      })
       socket.on('state', ({ state }) => {
         if (!this.isHost) {
-          this.state = state.teams
+          this.teams = state.teams
           this.spies = state.spies
+        }
+      })
+      socket.on('users', users => {
+        this.roomInfo.players = users
+        if (this.isHost) {
+          this.updateUsersTeam()
         }
       })
       if (this.isHost) {
         socket.on('action', ({ id, action }) => {
           const otherTeam = otherColor(action)
-          const temp = new Set(this.state[action])
+          const temp = new Set(this.teams[action])
           temp.add(id)
-          this.state[action] = [...temp]
-          this.state[otherTeam] = this.state[otherTeam].filter(i => i !== id)
+          this.teams[action] = [...temp]
+          this.teams[otherTeam] = this.teams[otherTeam].filter(i => i !== id)
           this.updateUsersTeam()
         })
       }
@@ -115,9 +117,9 @@ export default {
   },
   methods: {
     updateUsersTeam() {
-      const { rid, state, spies } = this
+      const { rid, teams, spies } = this
       const id = this.$store.state.uid
-      socket.emit('state', { id, rid, state: { teams: state, spies } })
+      socket.emit('state', { id, rid, state: { teams, spies } })
     },
     updateOwnTeam(action) {
       const { rid } = this
@@ -127,7 +129,7 @@ export default {
     launchGame() {
       this.$store.dispatch(
         'launchGame',
-        this.state,
+        this.teams,
         this.roomInfo.players,
         this.spies
       )
@@ -139,23 +141,23 @@ export default {
     },
     bluePlayers() {
       return this.roomInfo.players.filter(player =>
-        this.state.blue.includes(player.id)
+        this.teams.blue.includes(player.id)
       )
     },
     redPlayers() {
       return this.roomInfo.players.filter(player =>
-        this.state.red.includes(player.id)
+        this.teams.red.includes(player.id)
       )
     },
     neutralPlayers() {
       return this.roomInfo.players.filter(
         player =>
-          !this.state.blue.includes(player.id) &&
-          !this.state.red.includes(player.id)
+          !this.teams.blue.includes(player.id) &&
+          !this.teams.red.includes(player.id)
       )
     },
     isLaunchable() {
-      const { blue, red } = this.state
+      const { blue, red } = this.teams
       if (blue.length + red.length === this.roomInfo.players.length) {
         return blue.length >= 2 && red.length >= 2
       }
