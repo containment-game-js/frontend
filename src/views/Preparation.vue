@@ -33,7 +33,6 @@ export default {
       const value = await response.json()
       this.roomInfo = value
       socket.on('users', users => (this.roomInfo.players = users))
-      socket.emit('action', 'hello it’s me !' + this.$store.state.name)
     } else {
       this.roomFound = true
     }
