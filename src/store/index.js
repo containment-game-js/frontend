@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import uuid from 'uuid/v4'
 import router from '@/router'
 import { socket } from '@/services/socket.io'
 
@@ -36,10 +37,23 @@ const blue = [26, 16, 13, 4, 21, 29, 2, 14, 9]
 const red = [27, 8, 17, 18, 24, 28, 15, 11]
 const murderer = 10
 
+const getUid = () => {
+  const uid = localStorage.getItem('uid')
+  if (uid) {
+    return uid
+  } else {
+    const newId = uuid()
+    localStorage.setItem('uid', newId)
+    return newId
+  }
+}
+
 const username = localStorage.getItem('username')
+const uid = getUid()
 
 export default new Vuex.Store({
   state: {
+    uid,
     name: username,
     roomId: null,
     board: {
@@ -64,41 +78,27 @@ export default new Vuex.Store({
     initGame(state) {},
   },
   actions: {
-    sendGameState(store) {
-      if (store.state.game) {
-        // socket.emit('game', )
+    sendGameState(store) {},
+    leaveRoom(store) {
+      const { name, roomId } = store.state
+      socket.emit('leave-room', { name, rid: roomId })
+    },
+    joinRoom(store, rid) {
+      if (!store.state.roomId) {
+        const { name, uid } = store.state
+        socket.emit('enter-room', { rid, id: uid, name })
+        if (router.currentRoute.name !== 'Preparation') {
+          router.push(`/preparation/${rid}`)
+        }
+        store.commit('enterPreparation', rid)
       }
-    },
-    leaveRoom(store, rid) {
-      if (rid) {
-        socket.emit('leave-room', {
-          name: store.state.name,
-          rid,
-        })
-      } else {
-        socket.emit('leave-room', {
-          name: store.state.name,
-          rid: store.state.roomId,
-        })
-      }
-    },
-    getRooms(store) {
-      socket.emit('get-rooms')
-    },
-    joinRoom(store, id) {
-      const { name } = store.state
-      socket.emit('enter-room', { rid: id, name })
-      router.push(`preparation/${id}`)
-      store.commit('enterPreparation', id)
     },
     createRoom(store, privateRoom) {
-      const { name } = store.state
-      console.log('there');
-      socket.emit('create-room', { name, privateRoom })
-      console.log('here');
+      const { name, uid } = store.state
+      socket.emit('create-room', { name, id: uid, privateRoom })
       socket.on('created-room', rid => {
         socket.off('created-room')
-        router.push(`preparation/${rid}`)
+        router.push(`/preparation/${rid}`)
         store.commit('enterPreparation', rid)
       })
     },

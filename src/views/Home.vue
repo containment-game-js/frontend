@@ -37,20 +37,18 @@
 import Row from '@/components/Row.vue'
 import Toggler from '@/components/Toggler.vue'
 import { socket } from '@/services/socket.io'
+import { connectionURL } from '@/services/backend'
+
 export default {
   components: {
     Row,
     Toggler,
   },
-  mounted() {
-    socket.on('rooms', rooms => {
-      this.updateRooms(rooms)
-    })
-    this.$store.dispatch('getRooms')
+  mounted: async function () {
+    const response = await fetch(`${connectionURL()}/get-rooms`)
+    const rooms = await response.json()
+    this.updateRooms(rooms)
     this.$refs.editable.innerText = this.$store.state.name
-  },
-  beforeDestroy() {
-    socket.off('rooms')
   },
   data() {
     return {
@@ -72,7 +70,6 @@ export default {
       this.$store.dispatch('createRoom', this.privateRoom)
     },
     enterRoom(room) {
-      console.log(room)
       this.$store.dispatch('joinRoom', room.id)
     },
     join() {

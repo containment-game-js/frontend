@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="">
+  <div class="" v-if="!roomFound">
     <h1>Welcome to room {{ this.roomInfo.name }}</h1>
     <div v-if="this.roomInfo.privateRoom">This room is private</div>
     <div v-else>This room is not private</div>
@@ -8,10 +8,14 @@
       {{ this.roomInfo }}
     </div>
   </div>
+  <div class="" v-else>
+    Room not found
+  </div>
 </template>
 
 <script>
 import { socket } from '@/services/socket.io'
+import { connectionURL } from '@/services/backend'
 
 export default {
   props: {
@@ -19,17 +23,24 @@ export default {
   },
   data() {
     const roomInfo = {}
-    return { roomInfo }
+    return { roomInfo, roomFound: false }
   },
-  mounted() {
-    socket.on('room-info', roomInfo => (this.roomInfo = roomInfo))
-    socket.on('users', users => (this.roomInfo.players = users))
+  mounted: async function () {
     const { rid } = this
-    socket.emit('get-room-info', { rid })
+    this.$store.dispatch('joinRoom', rid)
+    const response = await fetch(`${connectionURL()}/get-room-info/${rid}`)
+    if (response.status === 200) {
+      const value = await response.json()
+      this.roomInfo = value
+      socket.on('users', users => (this.roomInfo.players = users))
+      socket.emit('action', 'hello it’s me !' + this.$store.state.name)
+    } else {
+      this.roomFound = true
+    }
   },
   computed: {
     isHost() {
-      return socket.peerId === this.roomInfo.host
+      return this.$store.state.uid === this.roomInfo.host
     },
   },
 }
