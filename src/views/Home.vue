@@ -70,7 +70,9 @@ export default {
       this.$store.dispatch('createRoom', this.privateRoom)
     },
     enterRoom(room) {
-      this.$store.dispatch('joinRoom', room.id)
+      if (this.$store.state.roomId === room.id) {
+        this.$router.push(`/preparation/${room.id}`)
+      }
     },
     join() {
       this.modal = true
