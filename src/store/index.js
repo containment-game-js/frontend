@@ -3,39 +3,9 @@ import Vuex from 'vuex'
 import uuid from 'uuid/v4'
 import router from '@/router'
 import { socket } from '@/services/socket.io'
+import { CodeNamesEngine } from '@/engine/CodeNamesEngine'
 
 Vue.use(Vuex)
-
-const cards = [
-  'éléphant',
-  'éléphant',
-  'éléphant',
-  'éléphant',
-  'éléphant',
-  'éléphant',
-  'éléphant',
-  'éléphant',
-  'éléphant',
-  'éléphant',
-  'éléphant',
-  'hippopotame',
-  'louise',
-  'hippopotame',
-  'hippopotame',
-  'hippopotame',
-  'hippopotame',
-  'hippopotame',
-  'hippopotame',
-  'hippopotame',
-  'hippopotame',
-  'hippopotame',
-  'hippopotame',
-  'hippopotame',
-]
-
-const blue = [26, 16, 13, 4, 21, 29, 2, 14, 9]
-const red = [27, 8, 17, 18, 24, 28, 15, 11]
-const murderer = 10
 
 const getUid = () => {
   const uid = localStorage.getItem('uid')
@@ -48,23 +18,12 @@ const getUid = () => {
   }
 }
 
-const username = localStorage.getItem('username')
-const uid = getUid()
-
 export default new Vuex.Store({
   state: {
-    uid,
-    name: username,
+    uid: getUid(),
+    name: localStorage.getItem('username'),
     roomId: null,
-    board: {
-      cards,
-      blue,
-      red,
-      murderer,
-      foundBlue: [],
-      foundRed: [],
-      foundNeutral: [],
-    },
+    engine: null,
     game: null,
   },
   mutations: {
@@ -75,10 +34,22 @@ export default new Vuex.Store({
     enterPreparation(state, rid) {
       state.roomId = rid
     },
-    initGame(state) {},
+    addEngine(state, engine) {
+      state.engine = engine
+    },
   },
   actions: {
-    sendGameState(store) {},
+    launchGame(store, teams, players, spies) {
+      const finalPlayers = players.map(player => {
+        const isBlue = teams.blue.includes(player.id)
+        const team = isBlue ? 'blue' : 'red'
+        const spy = spies[team] === player.id
+        return { ...player, team, spy }
+      })
+      const engine = CodeNamesEngine(finalPlayers)
+      store.commit('addEngine', engine)
+      router.push(`/game/${store.state.roomId}`)
+    },
     leaveRoom(store) {
       const { name, roomId } = store.state
       socket.emit('leave-room', { name, rid: roomId })
