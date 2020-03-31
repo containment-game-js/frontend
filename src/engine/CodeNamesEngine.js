@@ -14,7 +14,7 @@ const generateRandomCards = (beginner, murderer) => {
   let blueOk = false
   const blue = []
   const red = []
-  let index = getRandomInt(0, 30)
+  let index = getRandomInt(0, 25)
   while (blue.length + red.length !== 17) {
     const cond =
       murderer === index || blue.includes(index) || red.includes(index)
@@ -32,16 +32,16 @@ const generateRandomCards = (beginner, murderer) => {
           blueOk = true
         }
       }
-      index = getRandomInt(0, 30)
+      index = getRandomInt(0, 25)
     }
   }
   return { blue, red }
 }
 
 const init = () => {
-  const cards = new Array(30).fill(0).map(() => Dictionnary.random())
+  const cards = new Array(25).fill(0).map(() => Dictionnary.random())
   const beginner = chooseWhoBegin()
-  const murderer = getRandomInt(0, 30)
+  const murderer = getRandomInt(0, 25)
   const { blue, red } = generateRandomCards(beginner, murderer)
   return {
     cards,

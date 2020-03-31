@@ -4,6 +4,7 @@
     <h2>Please, ensure your name is correct or enter it.</h2>
     <h3>Click on it to edit!</h3>
     <div
+      style="min-height: 50px;"
       ref="editable"
       contenteditable
       @input="updateName($event.target.innerText)"
@@ -18,17 +19,22 @@
     <h2>Join Room</h2>
     <button type="button" @click="join">Join room</button>
     <div class="rooms">
-      <label
-        v-bind:key="room.id"
+      <a
         v-for="room in rooms"
-        class="room"
-        @click="enterRoom(room)"
+        @click.prevent="enterRoom(room)"
+        :href="`/preparation/${room.id}`"
+        :key="room.id"
       >
-        {{ room.name }}
-        <div v-bind:key="player.name + room.id" v-for="player in room.players">
-          {{ player.name }}
-        </div>
-      </label>
+        <label class="room">
+          {{ room.name }}
+          <div
+            v-bind:key="player.name + room.id"
+            v-for="player in room.players"
+          >
+            {{ player.name }}
+          </div>
+        </label>
+      </a>
     </div>
   </main>
 </template>
@@ -70,7 +76,10 @@ export default {
       this.$store.dispatch('createRoom', this.privateRoom)
     },
     enterRoom(room) {
-      if (this.$store.state.roomId === room.id) {
+      if (
+        this.$store.state.roomId === null ||
+        this.$store.state.roomId === room.id
+      ) {
         this.$router.push(`/preparation/${room.id}`)
       }
     },

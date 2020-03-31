@@ -39,7 +39,7 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    launchGame(store, teams, players, spies) {
+    launchGame(store, { teams, players, spies }) {
       const finalPlayers = players.map(player => {
         const isBlue = teams.blue.includes(player.id)
         const team = isBlue ? 'blue' : 'red'

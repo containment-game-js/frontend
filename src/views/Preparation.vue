@@ -127,12 +127,9 @@ export default {
       socket.emit('action', { id, rid, action })
     },
     launchGame() {
-      this.$store.dispatch(
-        'launchGame',
-        this.teams,
-        this.roomInfo.players,
-        this.spies
-      )
+      const { teams, roomInfo, spies } = this
+      const { players } = roomInfo
+      this.$store.dispatch('launchGame', { teams, players, spies })
     },
   },
   computed: {
