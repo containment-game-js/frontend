@@ -1,18 +1,51 @@
 <template lang="html">
   <div class="layout">
-    <div class="nav">Navbar Room id: {{ $route.params.id }}</div>
+    <div class="nav">
+      <div>Navbar Room id: {{ rid }}</div>
+      <div>Turn: {{ this.viewState.turn }}</div>
+      <div>
+        Spy or Player:
+        {{ this.viewState.spyToTalk ? 'Spy' : 'Players' }}
+      </div>
+      <div class="">Team: {{ this.team }}</div>
+    </div>
     <aside class="sidebar">
       Sidebar
-      <div class="player" v-for="p in players" :key="p.id">
+      <div class="player" v-for="p in roomInfo.players" :key="p.id">
         {{ p.name }}
+      </div>
+      <div v-if="isSpy && isTurn && viewState.spyToTalk">
+        <h2>Hint</h2>
+        <label>
+          Word
+          <input type="text" name="" v-model="hint" />
+        </label>
+        <br />
+        <label>
+          Number
+          <input type="number" name="" v-model.number="numberToGuess" />
+        </label>
+        <button type="button" @click="sendHint">Send hint</button>
+      </div>
+      <div class="">
+        <h2>HINT</h2>
+        <div class="">Word: {{ this.viewState.hint }}</div>
+        <div class="">Number: {{ this.viewState.numberToGuess }}</div>
       </div>
     </aside>
     <div class="board">
+      <div v-if="viewState.winner === team">
+        WINNER
+      </div>
+      <div v-else-if="viewState.winner === otherTeam">
+        LOSER
+      </div>
       <div
-        v-for="(card, index) in board.cards"
-        :class="`card ${correctCardColor(index)}`"
-        :key="card"
-        @click="action({ name: card })"
+        v-else
+        v-for="(card, index) in (this.viewState || {}).cards"
+        :class="`card ${correctCardColor(index)} ${canClick(index)}`"
+        :key="card + index"
+        @click="action(index)"
       >
         <div>{{ card }}</div>
       </div>
@@ -22,52 +55,145 @@
 
 <script>
 import { socket, reconnect } from '@/services/socket.io'
+import { connectionURL } from '@/services/backend'
+
 export default {
-  mounted() {
-    // socket.on('action', val => console.log('action', val))
+  props: {
+    rid: String,
+  },
+  beforeMount: async function () {},
+  mounted: async function () {
     socket.on('users', users => {
       this.players = users
     })
+    socket.on('state', ({ state }) => {
+      this.viewState = state
+    })
+    const { rid } = this
+    const response = await fetch(`${connectionURL()}/get-room-info/${rid}`)
+    if (response.status === 200) {
+      const value = await response.json()
+      this.roomInfo = value
+    }
+    if (this.isHost) {
+      this.$store.dispatch('dispatchState')
+      socket.on('action', action => this.$store.dispatch('runAction', action))
+    }
   },
   beforeDestroy() {
-    const remainingUsers = this.players.filter(p => p.id != socket.id)
-    socket.emit('users', remainingUsers)
     socket.off('action')
+    socket.off('state')
     socket.off('users')
-    socket.off('go-private')
-    reconnect()
     this.$store.dispatch('leaveRoom')
   },
   data() {
-    return {
+    const roomInfo = { players: [] }
+    const viewState = {
+      cards: [],
       players: [],
+      foundBlue: [],
+      foundRed: [],
+      foundNeutral: [],
     }
+    return { roomInfo, viewState, hint: '', numberToGuess: 0 }
   },
   methods: {
+    sendHint() {
+      const { hint, numberToGuess, rid } = this
+      const { uid } = this.$store.state
+      const action = { type: 'talk', params: { hint, numberToGuess } }
+      socket.emit('action', { id: uid, rid, action })
+    },
+    isFound(index) {
+      return (
+        this.viewState.foundRed.includes(index) ||
+        this.viewState.foundNeutral.includes(index) ||
+        this.viewState.foundBlue.includes(index)
+      )
+    },
+    canClick(index) {
+      const founded = this.isFound(index)
+      if (!founded && this.isTurn && !this.viewState.spyToTalk && !this.isSpy) {
+        return 'clickable'
+      } else {
+        return 'none-clickable'
+      }
+    },
     correctCardColor(index) {
-      if (this.board.red.includes(index)) {
+      if (this.isSpy) {
+        return this.spyCorrectCardColor(index)
+      } else {
+        return this.otherCorrectCardColor(index)
+      }
+    },
+    spyCorrectCardColor(index) {
+      if (this.viewState.red.includes(index)) {
         return 'red'
-      } else if (this.board.blue.includes(index)) {
+      } else if (this.viewState.blue.includes(index)) {
         return 'blue'
-      } else if (this.board.murderer === index) {
+      } else if (this.viewState.murderer === index) {
         return 'black'
       } else {
         return 'brown'
       }
     },
-    action(params) {
-      socket.emit('action', params)
+    otherCorrectCardColor(index) {
+      if (this.viewState.foundRed.includes(index)) {
+        return 'red'
+      } else if (this.viewState.foundBlue.includes(index)) {
+        return 'blue'
+      } else if (this.viewState.foundNeutral.includes(index)) {
+        return 'brown'
+      } else if (this.viewState.foundMurderer === index) {
+        return 'black'
+      } else {
+        return 'white'
+      }
+    },
+    action(cardNumber) {
+      const { rid } = this
+      const { uid } = this.$store.state
+      const action = { type: 'guess', params: { cardNumber } }
+      socket.emit('action', { id: uid, rid, action })
     },
   },
   computed: {
     id() {
       return this.$route.params.id
     },
+    engine() {
+      return this.$store.state.engine || {}
+    },
     board() {
-      return this.$store.state.board
+      return this.engine.state || {}
     },
     cards() {
-      return this.board.cards
+      return this.board.cards || []
+    },
+    isHost() {
+      return this.roomInfo.host === this.$store.state.uid
+    },
+    isSpy() {
+      return this.viewState.murderer !== undefined
+    },
+    team() {
+      const { uid } = this.$store.state
+      const player = this.viewState.players.find(({ id }) => id === uid)
+      if (player) {
+        return player.team
+      } else {
+        return null
+      }
+    },
+    otherTeam() {
+      if (this.team === 'red') {
+        return 'blue'
+      } else {
+        return 'red'
+      }
+    },
+    isTurn() {
+      return this.viewState.turn === this.team || false
     },
   },
 }
@@ -88,6 +214,8 @@ export default {
   grid-area: nav;
   background: pink;
   padding: 12px;
+  display: flex;
+  justify-content: space-around;
 }
 
 .sidebar {
@@ -129,6 +257,18 @@ export default {
 
 .black {
   background-color: rgb(75, 75, 75);
+}
+
+.white {
+  background-color: white;
+}
+
+.none-clickable {
+  cursor: not-allowed;
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .card div {

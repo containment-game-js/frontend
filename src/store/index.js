@@ -47,12 +47,14 @@ export default new Vuex.Store({
         return { ...player, team, spy }
       })
       const engine = CodeNamesEngine(finalPlayers)
+      const { uid, roomId } = store.state
+      socket.emit('state', { id: uid, rid: roomId, state: 'start' })
       store.commit('addEngine', engine)
       router.push(`/game/${store.state.roomId}`)
     },
     leaveRoom(store) {
       const { name, roomId } = store.state
-      socket.emit('leave-room', { name, rid: roomId })
+      // socket.emit('leave-room', { name, rid: roomId })
     },
     joinRoom(store, rid) {
       if (!store.state.roomId) {
@@ -71,6 +73,20 @@ export default new Vuex.Store({
         socket.off('created-room')
         router.push(`/preparation/${rid}`)
         store.commit('enterPreparation', rid)
+      })
+    },
+    runAction(store, { action, id }) {
+      const { type, params } = action
+      store.state.engine.run(type, id, params)
+      store.dispatch('dispatchState')
+    },
+    dispatchState(store) {
+      const { players } = store.state.engine
+      players.forEach(player => {
+        const { id } = player
+        const state = store.state.engine.getState(id)
+        const { uid, roomId } = store.state
+        socket.emit('state', { id: uid, rid: roomId, to: id, state })
       })
     },
   },

@@ -8,7 +8,10 @@ class Engine_ {
     this.players = players
     this.state = state
     this.actions = actions
-    this.getState = pid => filter(this.state, pid)
+    this.getState = function (pid) {
+      const player = this.players.find(({ id }) => id === pid)
+      return filter(this.state, player, this.players)
+    }
   }
 
   run(action, pid, params) {

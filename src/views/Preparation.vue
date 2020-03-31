@@ -86,8 +86,12 @@ export default {
       this.roomInfo = value
       socket.on('state', ({ state }) => {
         if (!this.isHost) {
-          this.teams = state.teams
-          this.spies = state.spies
+          if (state !== 'start') {
+            this.teams = state.teams
+            this.spies = state.spies
+          } else {
+            this.$router.push(`/game/${rid}`)
+          }
         }
       })
       socket.on('users', users => {

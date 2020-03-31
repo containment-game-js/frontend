@@ -61,11 +61,11 @@ const init = () => {
   }
 }
 
-const filter = (state, player) => {
+const filter = (state, player, players) => {
   if (player.spy) {
-    return state
+    return { ...state, players }
   } else {
-    const newState = { ...state }
+    const newState = { ...state, players }
     delete newState.blue
     delete newState.red
     delete newState.murderer
@@ -115,11 +115,12 @@ const opponentAnswer = (state, player, cardNumber) => {
   }
 }
 
-const murdererAnswer = (state, player) => {
+const murdererAnswer = (state, player, cardNumber) => {
   const otherTeam = otherColor(player.team)
   return {
     ...state,
-    win: otherTeam,
+    winner: otherTeam,
+    foundMurderer: cardNumber,
   }
 }
 
@@ -157,7 +158,7 @@ const guess = (state, player, { cardNumber }) => {
     } else if (state[otherTeam].includes(cardNumber)) {
       return opponentAnswer(state, player, cardNumber)
     } else if (cardNumber === state.murderer) {
-      return murdererAnswer(state, player)
+      return murdererAnswer(state, player, cardNumber)
     } else {
       return neutralAnswer(state, player, cardNumber)
     }
