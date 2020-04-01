@@ -1,6 +1,6 @@
 <template lang="html">
-  <div :class="{ padY: padY || pad, padX: padX || pad }">
-    <div :class="{ card: true, contrast }">
+  <div class="full-height" :class="paddingClasses">
+    <div class="card full-height" :class="{ contrast }">
       <slot :constrast="contrast" />
     </div>
   </div>
@@ -14,16 +14,30 @@ export default {
     padX: Boolean,
     contrast: Boolean,
   },
+  computed: {
+    paddingClasses() {
+      const { padY, padX, pad } = this
+      const vertical = padY || pad
+      const horizontal = padX || pad
+      return { 'pad-y': vertical, 'pad-x': horizontal }
+    },
+  },
 }
 </script>
 
 <style lang="css" scoped>
+.full-height {
+  height: 100%;
+}
+
 .card {
   /* Set defaults for non contrasted card. */
   --background: transparent;
   --border-color: var(--primary);
   --text-color: inherit;
 
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--border-color);
   border-radius: 5px;
   background: var(--background);
@@ -38,12 +52,12 @@ export default {
   --text-color: var(--ternary);
 }
 
-.padY {
+.pad-y {
   padding-top: 12px;
   padding-bottom: 12px;
 }
 
-.padX {
+.pad-x {
   padding-right: 12px;
   padding-left: 12px;
 }

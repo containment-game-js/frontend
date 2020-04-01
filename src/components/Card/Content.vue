@@ -1,5 +1,5 @@
 <template lang="html">
-  <div :class="{ pad }">
+  <div class="card-content" :class="{ pad }">
     <slot />
   </div>
 </template>
@@ -18,5 +18,9 @@ export default {
 <style lang="css" scoped>
 .pad {
   padding: 12px;
+}
+
+.card-content {
+  flex: 1;
 }
 </style>
