@@ -30,8 +30,9 @@ export default new Vuex.Store({
   },
   mutations: {
     updateName(state, name) {
-      state.name = name
-      localStorage.setItem('username', name)
+      const finalName = name.replace(/ /g, '')
+      state.name = finalName
+      localStorage.setItem('username', finalName)
     },
     enterPreparation(state, rid) {
       state.roomId = rid

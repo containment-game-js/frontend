@@ -9,6 +9,7 @@
         <card-content>
           <input
             class="full"
+            @keydown.space.prevent
             @input="$store.commit('updateName', $event.target.value)"
             :value="$store.state.name"
           />
