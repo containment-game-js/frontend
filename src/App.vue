@@ -63,4 +63,13 @@ h6 {
   -moz-osx-font-smoothing: grayscale;
   height: 100vh;
 }
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
 </style>

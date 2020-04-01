@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import uuid from 'uuid/v4'
 import router from '@/router'
 import { socket } from '@/services/socket.io'
+import { connectionURL } from '@/services/backend'
 import { CodeNamesEngine } from '@/engine/CodeNamesEngine'
 
 Vue.use(Vuex)
@@ -25,6 +26,7 @@ export default new Vuex.Store({
     roomId: null,
     engine: null,
     game: null,
+    rooms: [],
   },
   mutations: {
     updateName(state, name) {
@@ -37,8 +39,16 @@ export default new Vuex.Store({
     addEngine(state, engine) {
       state.engine = engine
     },
+    addRooms(state, rooms) {
+      state.rooms = rooms
+    },
   },
   actions: {
+    async updateRooms(store) {
+      const response = await fetch(`${connectionURL()}/get-rooms`)
+      const rooms = await response.json()
+      store.commit('addRooms', rooms)
+    },
     launchGame(store, { teams, players, spies }) {
       const finalPlayers = players.map(player => {
         const isBlue = teams.blue.includes(player.id)

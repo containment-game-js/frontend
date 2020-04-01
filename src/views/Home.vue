@@ -9,7 +9,7 @@
         <card-content>
           <input
             class="full"
-            @input="updateName($event.target.value)"
+            @input="$store.commit('updateName', $event.target.value)"
             :value="$store.state.name"
           />
         </card-content>
@@ -43,7 +43,16 @@
         </card-content>
       </card>
       <card pad-y>
-        <card-header>Public rooms</card-header>
+        <card-header>
+          <row align="center" space>
+            Public rooms
+            <refresh-ccw-icon
+              size="1x"
+              :class="{ refresh: true, rotating: updatingRooms }"
+              @click="updateRooms"
+            />
+          </row>
+        </card-header>
         <card-content>
           <grid :columns="3" gap="medium">
             <a
@@ -78,6 +87,7 @@
 </template>
 
 <script>
+import { RefreshCcwIcon } from 'vue-feather-icons'
 import Row from '@/components/Row.vue'
 import Card from '@/components/Card.vue'
 import CardContent from '@/components/Card/Content.vue'
@@ -86,7 +96,6 @@ import CardFooter from '@/components/Card/Footer.vue'
 import Grid from '@/components/Grid.vue'
 import Toggler from '@/components/Toggler.vue'
 import { socket } from '@/services/socket.io'
-import { connectionURL } from '@/services/backend'
 
 export default {
   components: {
@@ -97,45 +106,53 @@ export default {
     CardHeader,
     CardFooter,
     Grid,
+    RefreshCcwIcon,
   },
-  mounted: async function () {
-    const response = await fetch(`${connectionURL()}/get-rooms`)
-    const rooms = await response.json()
-    this.updateRooms(rooms)
+  mounted() {
+    this.updateRooms()
   },
   data() {
     return {
       modal: false,
-      id: '',
-      rooms: [],
       privateRoom: false,
+      updatingRooms: false,
+      lastTime: Date.now(),
     }
   },
   methods: {
-    updateName(value) {
-      this.$store.commit('updateName', value)
-    },
-    updateRooms(rooms) {
-      this.rooms = rooms
+    updateRooms() {
+      this.updatingRooms = true
+      this.lastTime = Date.now()
+      this.$store.dispatch('updateRooms')
     },
     create() {
-      event.preventDefault()
-      this.$store.dispatch('createRoom', this.privateRoom)
+      const { name } = this.$store.state
+      if (name !== '') {
+        this.$store.dispatch('createRoom', this.privateRoom)
+      }
     },
     enterRoom(room) {
-      if (
-        this.$store.state.roomId === null ||
-        this.$store.state.roomId === room.id
-      ) {
+      const { name, roomId } = this.$store.state
+      if (name !== '' && (roomId === null || roomId === room.id)) {
         this.$router.push(`/preparation/${room.id}`)
       }
     },
     join() {
       this.modal = true
     },
-    submit(event) {
-      event.preventDefault()
-      this.$store.dispatch('joinRoom', this.id)
+  },
+  computed: {
+    rooms() {
+      return this.$store.state.rooms
+    },
+  },
+  watch: {
+    rooms(oldRooms, newRooms) {
+      if (Date.now() - this.lastTime < 1000) {
+        setTimeout(() => (this.updatingRooms = false), 1000)
+      } else {
+        this.updatingRooms = false
+      }
     },
   },
 }
@@ -172,6 +189,14 @@ export default {
 
 .pad-bottom {
   padding-bottom: 6px;
+}
+
+.refresh {
+  cursor: pointer;
+}
+
+.rotating {
+  animation: 2s linear 0s infinite running rotation;
 }
 
 .room-card {
