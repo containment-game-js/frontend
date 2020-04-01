@@ -172,6 +172,7 @@ export default {
   font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
+  color: inherit;
 }
 
 .main {
