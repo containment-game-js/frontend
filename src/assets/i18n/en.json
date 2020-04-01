@@ -1,0 +1,20 @@
+{
+  "home": {
+    "title": {
+      "username": "Enter your username",
+      "enterOrJoin": "Create or join room",
+      "publicRooms": "Public room | Public room | Public rooms",
+      "players": "No Player | Player | Players"
+    },
+    "paragraph": {
+      "createRoom": "You can create a room public or private.",
+      "joinRoom": "You can join a room if you know it's identifier."
+    },
+    "button": {
+      "private": "Private",
+      "createRoom": "Create room",
+      "joinRoom": "Join room",
+      "cardJoin": "Click on the card to join the game!"
+    }
+  }
+}

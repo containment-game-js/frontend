@@ -5,7 +5,7 @@
     </nav>
     <main class="main pad">
       <card pad-y>
-        <card-header>Enter your username</card-header>
+        <card-header>{{ $t('home.title.username') }}</card-header>
         <card-content>
           <input
             class="full"
@@ -16,28 +16,30 @@
         </card-content>
       </card>
       <card pad-y>
-        <card-header>Create or join room</card-header>
+        <card-header>{{ $t('home.title.enterOrJoin') }}</card-header>
         <card-content :pad="false">
           <row grow>
             <div class="separator pad">
               <row full grow align="center">
                 <div>
-                  <p>
-                    You can create a room public or private.
-                  </p>
+                  <p>{{ $t('home.paragraph.createRoom') }}</p>
                   <toggler
                     style="padding-top: 6px;"
-                    label="Private"
+                    :label="$t('home.button.private')"
                     v-model="privateRoom"
                   />
                 </div>
-                <button class="button" @click="create">Create room</button>
+                <button class="button" @click="create">
+                  {{ $t('home.button.createRoom') }}
+                </button>
               </row>
             </div>
             <div class="pad">
               <row full grow align="center">
-                <p>You can join a room if you know it's identifier.</p>
-                <button class="button" @click="join">Join room</button>
+                <p>{{ $t('home.paragraph.joinRoom') }}</p>
+                <button class="button" @click="join">
+                  {{ $t('home.button.joinRoom') }}
+                </button>
               </row>
             </div>
           </row>
@@ -46,7 +48,7 @@
       <card pad-y>
         <card-header>
           <row align="center" space>
-            Public rooms
+            {{ $tc('home.title.publicRooms', rooms.length) }}
             <refresh-ccw-icon
               size="1x"
               :class="{ refresh: true, rotating: updatingRooms }"
@@ -68,7 +70,9 @@
                   {{ room.name }}
                 </card-header>
                 <card-content>
-                  <h4 class="pad-bottom">Players</h4>
+                  <h4 class="pad-bottom">
+                    {{ $tc('home.title.players', room.players.length) }}
+                  </h4>
                   <div
                     :key="player.name + room.id"
                     v-for="player in room.players"
@@ -77,7 +81,7 @@
                     {{ player.name }}
                   </div>
                 </card-content>
-                <card-footer>Click on the card to join!</card-footer>
+                <card-footer>{{ $t('home.button.cardJoin') }}</card-footer>
               </card>
             </a>
           </grid>

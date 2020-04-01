@@ -1,0 +1,20 @@
+{
+  "home": {
+    "title": {
+      "username": "Entrez votre nom d'utilisateur",
+      "enterOrJoin": "Créer ou rejoindre une salle",
+      "publicRooms": "Salle publique | Salle publique | Salles publiques",
+      "players": "Aucun joueur | Joueur | Joueurs"
+    },
+    "paragraph": {
+      "createRoom": "Vous pouvez créer une salle publique ou privée.",
+      "joinRoom": "Vous pouvez rejoindre une salle si vous connaissez son identifiant."
+    },
+    "button": {
+      "private": "Privée",
+      "createRoom": "Créer une salle",
+      "joinRoom": "Rejoindre une salle",
+      "cardJoin": "Cliquez sur la carte pour se joindre à la partie !"
+    }
+  }
+}
