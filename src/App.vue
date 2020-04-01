@@ -23,10 +23,38 @@
 
 body {
   margin: 0;
+  background: var(--background);
+  color: var(--ternary);
+}
+
+p {
+  margin: 0;
 }
 
 * {
   box-sizing: border-box;
+}
+
+input {
+  color: inherit;
+  background: inherit;
+  border: none;
+  font-size: inherit;
+  width: 100%;
+  outline: none;
+}
+
+input[type='checkbox'] {
+  width: auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
 }
 
 #app {
