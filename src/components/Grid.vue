@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 export default {
   props: {
     columns: {
@@ -25,7 +27,7 @@ export default {
         const isCorrect = values.includes(value)
         if (!isCorrect) {
           const warning = `Grid gap should be one of [${values.join(', ')}].`
-          console.error([warning, `You gave ${value}.`].join(' '))
+          Vue.$log.warn([warning, `You gave ${value}.`].join(' '))
         }
         return isCorrect
       },
