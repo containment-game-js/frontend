@@ -113,6 +113,7 @@ export default {
   },
   mounted() {
     this.updateRooms()
+    this.$store.dispatch('endSocket')
   },
   data() {
     return {
@@ -137,7 +138,7 @@ export default {
     enterRoom(room) {
       const { name } = this.$store.state
       if (name !== '') {
-        this.$store.dispatch('joinRoom', room.id)
+        this.$router.push(`/preparation/${room.id}`)
       }
     },
     join() {

@@ -17,5 +17,30 @@
       "joinRoom": "Rejoindre une salle",
       "cardJoin": "Cliquez sur la carte pour se joindre à la partie !"
     }
+  },
+  "preparation": {
+    "launch": "Lancez la partie !",
+    "launchNow": "Commencer maintenant !",
+    "title": {
+      "welcome": "Bienvenue dans la salle",
+      "players": "Joueurs",
+      "spies": "Espions",
+      "teams": "Équipes"
+    },
+    "info": {
+      "private": "Salle privée",
+      "true": "True",
+      "false": "False",
+      "host": "Hôte"
+    },
+    "card": {
+      "red": "Rouge :",
+      "blue": "Bleu :",
+      "explanations": "Vous pouvez choisir votre équipe ici. Choisissez sagement, et cliquez sur la couleur de votre choix. Évidemment, vous ne pouvez pas cliquer sur la box grise.",
+      "redTeam": "Rouge",
+      "nonChoosed": "Indécis",
+      "blueTeam": "Bleu",
+      "clickMe": "Cliquez ici !"
+    }
   }
 }

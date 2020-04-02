@@ -21,6 +21,9 @@ export default {}
 .navbar {
   border-bottom: 1px solid var(--primary);
   display: flex;
+  position: sticky;
+  top: 0;
+  background: var(--background);
 }
 
 .main {

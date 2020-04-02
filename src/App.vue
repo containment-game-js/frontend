@@ -80,4 +80,14 @@ h6 {
 .pad-bottom {
   padding-bottom: 6px;
 }
+
+.pad-y {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.pad-x {
+  padding-right: 12px;
+  padding-left: 12px;
+}
 </style>
