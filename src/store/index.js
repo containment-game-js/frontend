@@ -36,18 +36,33 @@ const getRoomInfo = async rid => {
   }
 }
 
+const generateEnginePlayers = ({ players, teams, spies }) => {
+  return players.map(player => {
+    const isBlue = teams.blue.includes(player.id)
+    const team = isBlue ? 'blue' : 'red'
+    const spy = spies[team] === player.id
+    return { ...player, team, spy }
+  })
+}
+
 export default new Vuex.Store({
   state: {
     uid: getUid(),
     name: localStorage.getItem('username'),
     roomId: null,
     engine: null,
-    game: null,
     rooms: [],
-    roomInfo: null,
+    roomInfo: { players: [] },
     isHost: false,
     teams: { red: [], blue: [] },
     spies: { red: null, blue: null },
+    gameState: {
+      cards: [],
+      players: [],
+      foundBlue: [],
+      foundRed: [],
+      foundNeutral: [],
+    },
   },
   mutations: {
     resetTeams(state) {
@@ -90,6 +105,9 @@ export default new Vuex.Store({
     updateSpy(state, { pid, team }) {
       state.spies[team] = pid
     },
+    updateGameState(state, gameState) {
+      state.gameState = gameState
+    },
   },
   actions: {
     updateSpy(store, { pid, team }) {
@@ -101,15 +119,25 @@ export default new Vuex.Store({
       const rooms = await response.json()
       store.commit('addRooms', rooms)
     },
+    launchGameMock(store) {
+      const { players } = store.state.roomInfo
+      const playersId = players.map(p => p.id)
+      const teams = {
+        red: playersId.slice(0, 2),
+        blue: playersId.slice(2),
+      }
+      const spies = {
+        red: teams.red[0],
+        blue: teams.blue[0],
+      }
+      const finalPlayers = generateEnginePlayers({ players, teams, spies })
+      const engine = CodeNamesEngine(finalPlayers)
+      store.commit('addEngine', engine)
+    },
     launchGame(store) {
       const { teams, spies, roomInfo } = store.state
       const { players } = roomInfo
-      const finalPlayers = players.map(player => {
-        const isBlue = teams.blue.includes(player.id)
-        const team = isBlue ? 'blue' : 'red'
-        const spy = spies[team] === player.id
-        return { ...player, team, spy }
-      })
+      const finalPlayers = generateEnginePlayers({ players, teams, spies })
       const engine = CodeNamesEngine(finalPlayers)
       const { uid, roomId } = store.state
       socket.emit('state', { id: uid, rid: roomId, state: 'start' })
@@ -121,8 +149,11 @@ export default new Vuex.Store({
       // socket.emit('leave-room', { name, rid: roomId })
     },
     listenForWebsocket(store) {
-      if (router.currentRoute.name === 'Preparation') {
-        store.dispatch('listenForPreparation')
+      switch (router.currentRoute.name) {
+        case 'Preparation':
+          return store.dispatch('listenForPreparation')
+        case 'Game':
+          return store.dispatch('listenForGame')
       }
     },
     listenForPreparation(store) {
@@ -147,6 +178,20 @@ export default new Vuex.Store({
           store.commit('updateRoomTeams', { id, action })
           store.dispatch('updateUsersTeam')
         })
+        store.dispatch('updateUsersTeam')
+      }
+    },
+    listenForGame(store) {
+      socket.on('users', users => {
+        store.commit('updateRoomInfoPlayers', users)
+        if (store.state.isHost) {
+          store.dispatch('dispatchState')
+        }
+      })
+      socket.on('state', ({ state }) => store.commit('updateGameState', state))
+      if (store.state.isHost) {
+        store.dispatch('dispatchState')
+        socket.on('action', action => store.dispatch('runAction', action))
       }
     },
     async joinRoom(store, rid) {
@@ -188,13 +233,16 @@ export default new Vuex.Store({
       store.dispatch('dispatchState')
     },
     dispatchState(store) {
-      const { players } = store.state.engine
-      players.forEach(player => {
-        const { id } = player
-        const state = store.state.engine.getState(id)
-        const { uid, roomId } = store.state
-        socket.emit('state', { id: uid, rid: roomId, to: id, state })
-      })
+      const { engine } = store.state
+      if (engine) {
+        const { players } = engine
+        players.forEach(player => {
+          const { id } = player
+          const state = store.state.engine.getState(id)
+          const { uid, roomId } = store.state
+          socket.emit('state', { id: uid, rid: roomId, to: id, state })
+        })
+      }
     },
   },
   modules: {},

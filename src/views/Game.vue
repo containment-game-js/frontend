@@ -58,26 +58,12 @@ import { socket, reconnect } from '@/services/socket.io'
 import { connectionURL } from '@/services/backend'
 
 export default {
-  props: {
-    rid: String,
-  },
+  props: { rid: String },
   beforeMount: async function () {},
   mounted: async function () {
-    socket.on('users', users => {
-      this.players = users
-    })
-    socket.on('state', ({ state }) => {
-      this.viewState = state
-    })
-    const { rid } = this
-    const response = await fetch(`${connectionURL()}/get-room-info/${rid}`)
-    if (response.status === 200) {
-      const value = await response.json()
-      this.roomInfo = value
-    }
-    if (this.isHost) {
-      this.$store.dispatch('dispatchState')
-      socket.on('action', action => this.$store.dispatch('runAction', action))
+    await this.$store.dispatch('joinRoom', this.rid)
+    if (this.$store.state.isHost && process.env.NODE_ENV === 'development') {
+      this.$store.dispatch('launchGameMock')
     }
   },
   beforeDestroy() {
@@ -87,15 +73,7 @@ export default {
     this.$store.dispatch('leaveRoom')
   },
   data() {
-    const roomInfo = { players: [] }
-    const viewState = {
-      cards: [],
-      players: [],
-      foundBlue: [],
-      foundRed: [],
-      foundNeutral: [],
-    }
-    return { roomInfo, viewState, hint: '', numberToGuess: 0 }
+    return { hint: '', numberToGuess: 0 }
   },
   methods: {
     sendHint() {
@@ -169,6 +147,12 @@ export default {
     },
     cards() {
       return this.board.cards || []
+    },
+    roomInfo() {
+      return this.$store.state.roomInfo
+    },
+    viewState() {
+      return this.$store.state.gameState
     },
     isHost() {
       return this.roomInfo.host === this.$store.state.uid
