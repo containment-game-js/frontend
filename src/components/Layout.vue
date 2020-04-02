@@ -1,5 +1,5 @@
 <template lang="html">
-  <div>
+  <div class="layout" :class="{ full }">
     <nav class="navbar pad">
       <h1>Containment Game</h1>
       <slot name="navbar" />
@@ -7,23 +7,46 @@
     <aside class="sidebar">
       <slot name="sidebar" />
     </aside>
-    <main class="main pad">
+    <main :class="full ? 'full-height' : 'main pad'">
       <slot />
     </main>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  props: {
+    full: Boolean,
+  },
+}
 </script>
 
 <style lang="css" scoped>
+.layout {
+  display: grid;
+  grid-template-areas:
+    'navbar navbar'
+    'sidebar main';
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+}
+
+.full {
+  height: 100vh;
+}
+
+.full-height {
+  height: 100%;
+}
+
 .navbar {
+  grid-area: navbar;
   border-bottom: 1px solid var(--primary);
   display: flex;
   position: sticky;
   top: 0;
   background: var(--background);
+  align-items: center;
 }
 
 .main {

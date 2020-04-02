@@ -1,15 +1,15 @@
 <template lang="html">
-  <div class="layout">
-    <div class="nav">
-      <div>Navbar Room id: {{ rid }}</div>
-      <div>Turn: {{ this.viewState.turn }}</div>
+  <layout full>
+    <template v-slot:navbar>
+      <div class="code-inline mar-x">Navbar Room id: {{ rid }}</div>
+      <div>Turn: {{ viewState.turn }}</div>
       <div>
         Spy or Player:
-        {{ this.viewState.spyToTalk ? 'Spy' : 'Players' }}
+        {{ viewState.spyToTalk ? 'Spy' : 'Players' }}
       </div>
-      <div class="">Team: {{ this.team }}</div>
-    </div>
-    <aside class="sidebar">
+      <div class="">Team: {{ team }}</div>
+    </template>
+    <template v-slot:sidebar>
       Sidebar
       <div class="player" v-for="p in roomInfo.players" :key="p.id">
         {{ p.name }}
@@ -29,10 +29,10 @@
       </div>
       <div class="">
         <h2>HINT</h2>
-        <div class="">Word: {{ this.viewState.hint }}</div>
-        <div class="">Number: {{ this.viewState.numberToGuess }}</div>
+        <div class="">Word: {{ viewState.hint }}</div>
+        <div class="">Number: {{ viewState.numberToGuess }}</div>
       </div>
-    </aside>
+    </template>
     <div class="board">
       <div v-if="viewState.winner === team">
         WINNER
@@ -42,7 +42,7 @@
       </div>
       <div
         v-else
-        v-for="(card, index) in (this.viewState || {}).cards"
+        v-for="(card, index) in (viewState || {}).cards"
         :class="`card ${correctCardColor(index)} ${canClick(index)}`"
         :key="card + index"
         @click="action(index)"
@@ -50,15 +50,20 @@
         <div>{{ card }}</div>
       </div>
     </div>
-  </div>
+  </layout>
 </template>
 
 <script>
-import { socket, reconnect } from '@/services/socket.io'
-import { connectionURL } from '@/services/backend'
+import Layout from '@/components/Layout.vue'
+import { socket } from '@/services/socket.io'
 
 export default {
-  props: { rid: String },
+  components: {
+    Layout,
+  },
+  props: {
+    rid: String,
+  },
   beforeMount: async function () {},
   mounted: async function () {
     await this.$store.dispatch('joinRoom', this.rid)
@@ -67,9 +72,7 @@ export default {
     }
   },
   beforeDestroy() {
-    socket.off('action')
-    socket.off('state')
-    socket.off('users')
+    this.$store.dispatch('endSocket')
     this.$store.dispatch('leaveRoom')
   },
   data() {
@@ -98,10 +101,13 @@ export default {
       }
     },
     correctCardColor(index) {
-      if (this.isSpy) {
+      const found = this.isCardFound(index)
+      if (found) {
+        return found
+      } else if (this.isSpy) {
         return this.spyCorrectCardColor(index)
       } else {
-        return this.otherCorrectCardColor(index)
+        return 'white'
       }
     },
     spyCorrectCardColor(index) {
@@ -115,17 +121,17 @@ export default {
         return 'brown'
       }
     },
-    otherCorrectCardColor(index) {
+    isCardFound(index) {
       if (this.viewState.foundRed.includes(index)) {
-        return 'red'
+        return 'red hidden'
       } else if (this.viewState.foundBlue.includes(index)) {
-        return 'blue'
+        return 'blue hidden'
       } else if (this.viewState.foundNeutral.includes(index)) {
-        return 'brown'
+        return 'brown hidden'
       } else if (this.viewState.foundMurderer === index) {
-        return 'black'
+        return 'black hidden'
       } else {
-        return 'white'
+        return null
       }
     },
     action(cardNumber) {
@@ -184,30 +190,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.layout {
-  height: 100vh;
-  display: grid;
-  grid-template-areas:
-    'nav nav'
-    'sidebar board';
-  grid-template-rows: auto 1fr;
-  grid-template-columns: auto 1fr;
-}
-
-.nav {
-  grid-area: nav;
-  background: pink;
-  padding: 12px;
-  display: flex;
-  justify-content: space-around;
-}
-
-.sidebar {
-  grid-area: sidebar;
-  background: lightblue;
-  padding: 12px;
-}
-
 .board {
   grid-area: board;
   background: #eee;
@@ -216,6 +198,7 @@ export default {
   grid-template-rows: repeat(5, 1fr);
   grid-gap: 20px;
   padding: 20px;
+  height: 100%;
 }
 
 .card {
@@ -225,6 +208,7 @@ export default {
   justify-content: center;
   box-shadow: #d9d9d9 0px 0px 5px 1px;
   padding: 15px;
+  transition: all 1s;
 }
 
 .red {
@@ -255,15 +239,20 @@ export default {
   cursor: pointer;
 }
 
-.card div {
+.card > div {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #faecca;
   background: center / cover no-repeat url('../assets/clear.jpg');
   border-radius: 5px;
   text-transform: uppercase;
   height: 100%;
   width: 100%;
+  transition: all 1s;
+  opacity: 1;
+}
+
+.card.hidden > div {
+  opacity: 0;
 }
 </style>
