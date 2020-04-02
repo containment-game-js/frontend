@@ -57,7 +57,8 @@
           </row>
         </card-header>
         <card-content>
-          <grid :columns="3" gap="medium">
+          <div v-if="rooms.length === 0">{{ $t('home.paragraph.noRoom') }}</div>
+          <grid v-else :columns="3" gap="medium">
             <a
               @click.prevent="enterRoom(room)"
               :href="`/preparation/${room.id}`"
@@ -137,9 +138,9 @@ export default {
       }
     },
     enterRoom(room) {
-      const { name, roomId } = this.$store.state
-      if (name !== '' && (roomId === null || roomId === room.id)) {
-        this.$router.push(`/preparation/${room.id}`)
+      const { name } = this.$store.state
+      if (name !== '') {
+        this.$store.dispatch('joinRoom', room.id)
       }
     },
     join() {

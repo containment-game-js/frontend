@@ -8,7 +8,8 @@
     },
     "paragraph": {
       "createRoom": "You can create a room public or private.",
-      "joinRoom": "You can join a room if you know it's identifier."
+      "joinRoom": "You can join a room if you know it's identifier.",
+      "noRoom": "There’s no public rooms at the moment!"
     },
     "button": {
       "private": "Private",

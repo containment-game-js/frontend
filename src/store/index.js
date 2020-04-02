@@ -68,13 +68,11 @@ export default new Vuex.Store({
       // socket.emit('leave-room', { name, rid: roomId })
     },
     joinRoom(store, rid) {
-      if (!store.state.roomId) {
-        const { name, uid } = store.state
-        socket.emit('enter-room', { rid, id: uid, name })
-        if (router.currentRoute.name !== 'Preparation') {
-          router.push(`/preparation/${rid}`)
-        }
-        store.commit('enterPreparation', rid)
+      const { name, uid } = store.state
+      socket.emit('enter-room', { rid, id: uid, name })
+      store.commit('enterPreparation', rid)
+      if (router.currentRoute.name !== 'Preparation') {
+        router.push(`/preparation/${rid}`)
       }
     },
     createRoom(store, privateRoom) {

@@ -8,7 +8,8 @@
     },
     "paragraph": {
       "createRoom": "Vous pouvez créer une salle publique ou privée.",
-      "joinRoom": "Vous pouvez rejoindre une salle si vous connaissez son identifiant."
+      "joinRoom": "Vous pouvez rejoindre une salle si vous connaissez son identifiant.",
+      "noRoom": "Il n'y a pas de salle ouverte en ce moment !"
     },
     "button": {
       "private": "Privée",
