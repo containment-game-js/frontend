@@ -96,12 +96,25 @@
       </div>
     </template>
     <div class="board">
-      <div v-if="viewState.winner === team">
-        WINNER
-      </div>
-      <div v-else-if="viewState.winner === otherTeam">
-        LOSER
-      </div>
+      <template>
+        <div class="win" v-if="viewState.winner === team">
+          WINNER
+        </div>
+        <div class="lose" v-else-if="viewState.winner === otherTeam">
+          LOSER
+        </div>
+      </template>
+      <template v-if="viewState.winner !== null">
+        <row v-if="isHost">
+          <custom-button @click="anotherGame">Another one?</custom-button>
+          <custom-button @click="backToTeamSelection">
+            Back to team selection
+          </custom-button>
+        </row>
+        <row v-else>
+          Wait for the host to choose...
+        </row>
+      </template>
       <div
         v-else
         v-for="(card, index) in (viewState || {}).cards"
@@ -118,12 +131,14 @@
 <script>
 import Layout from '@/components/Layout.vue'
 import Button from '@/components/Button.vue'
+import Row from '@/components/Row.vue'
 import { socket } from '@/services/socket.io'
 
 export default {
   components: {
     CustomButton: Button,
     Layout,
+    Row,
   },
   props: {
     rid: String,
@@ -137,12 +152,18 @@ export default {
   },
   beforeDestroy() {
     this.$store.dispatch('endSocket')
-    this.$store.dispatch('leaveRoom')
   },
   data() {
     return { hint: '', numberToGuess: 1 }
   },
   methods: {
+    anotherGame: async function () {
+      await this.$store.dispatch('launchGame')
+      await this.$store.dispatch('dispatchState')
+    },
+    backToTeamSelection() {
+      this.$store.dispatch('backToTeamSelection')
+    },
     sendHint() {
       const { hint, numberToGuess, rid } = this
       const { uid } = this.$store.state
@@ -393,6 +414,7 @@ label {
 .sidebar {
   border-right: 1px solid var(--primary);
   height: 100%;
+  width: 250px;
 }
 
 .player-name:last-child {

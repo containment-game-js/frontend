@@ -68,6 +68,12 @@ export default new Vuex.Store({
     resetTeams(state) {
       state.teams = { red: [], blue: [] }
     },
+    setSpies(state, spies) {
+      state.spies = spies
+    },
+    setTeams(state, teams) {
+      state.teams = teams
+    },
     updateName(state, name) {
       const finalName = name.replace(/ /g, '')
       state.name = finalName
@@ -110,6 +116,10 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    backToTeamSelection(store) {
+      const { uid, roomId } = store.state
+      socket.emit('state', { id: uid, rid: roomId, state: 'back-selection' })
+    },
     updateSpy(store, { pid, team }) {
       store.commit('updateSpy', { pid, team })
       store.dispatch('updateUsersTeam')
@@ -130,9 +140,9 @@ export default new Vuex.Store({
         red: teams.red[0],
         blue: teams.blue[0],
       }
-      const finalPlayers = generateEnginePlayers({ players, teams, spies })
-      const engine = CodeNamesEngine(finalPlayers)
-      store.commit('addEngine', engine)
+      store.commit('setTeams', teams)
+      store.commit('setSpies', spies)
+      store.dispatch('launchGame')
     },
     launchGame(store) {
       const { teams, spies, roomInfo } = store.state
@@ -140,9 +150,11 @@ export default new Vuex.Store({
       const finalPlayers = generateEnginePlayers({ players, teams, spies })
       const engine = CodeNamesEngine(finalPlayers)
       const { uid, roomId } = store.state
-      socket.emit('state', { id: uid, rid: roomId, state: 'start' })
       store.commit('addEngine', engine)
-      router.push(`/game/${store.state.roomId}`)
+      if (router.currentRoute.name === 'Preparation') {
+        socket.emit('state', { id: uid, rid: roomId, state: 'start' })
+        router.push(`/game/${store.state.roomId}`)
+      }
     },
     leaveRoom() {
       // const { name, roomId } = store.state
@@ -188,7 +200,13 @@ export default new Vuex.Store({
           store.dispatch('dispatchState')
         }
       })
-      socket.on('state', ({ state }) => store.commit('updateGameState', state))
+      socket.on('state', ({ state }) => {
+        if (state === 'back-selection') {
+          router.push(`/preparation/${store.state.roomId}`)
+        } else {
+          store.commit('updateGameState', state)
+        }
+      })
       if (store.state.isHost) {
         store.dispatch('dispatchState')
         socket.on('action', action => store.dispatch('runAction', action))

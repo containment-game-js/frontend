@@ -27,7 +27,7 @@ export default {
   grid-template-areas:
     'navbar navbar'
     'sidebar main';
-  grid-template-columns: minmax(auto, 250px) 1fr;
+  grid-template-columns: auto 1fr;
   grid-template-rows: auto 1fr;
 }
 
