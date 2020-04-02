@@ -58,7 +58,7 @@ export default new Vuex.Store({
       state.name = finalName
       localStorage.setItem('username', finalName)
     },
-    enterPreparation(state, rid) {
+    setRoomId(state, rid) {
       state.roomId = rid
     },
     addEngine(state, engine) {
@@ -120,28 +120,22 @@ export default new Vuex.Store({
       // const { name, roomId } = store.state
       // socket.emit('leave-room', { name, rid: roomId })
     },
-    async joinRoom(store, rid) {
+    listenForWebsocket(store) {
+      if (router.currentRoute.name === 'Preparation') {
+        store.dispatch('listenForPreparation')
+      }
+    },
+    listenForPreparation(store) {
       socket.on('state', ({ state }) => {
         if (!store.state.isHost) {
           if (state !== 'start') {
             store.state.teams = state.teams
             store.state.spies = state.spies
           } else {
-            router.push(`/game/${rid}`)
+            router.push(`/game/${store.state.roomId}`)
           }
         }
       })
-      const { name, uid, roomId } = store.state
-      if (rid !== roomId) {
-        store.commit('resetTeams')
-      }
-      socket.emit('enter-room', { rid, id: uid, name })
-      store.commit('enterPreparation', rid)
-      if (router.currentRoute.name !== 'Preparation') {
-        router.push(`/preparation/${rid}`)
-      }
-      const roomInfo = await getRoomInfo(rid)
-      store.commit('addRoomInfo', roomInfo)
       socket.on('users', users => {
         store.commit('updateRoomInfoPlayers', users)
         if (store.state.isHost) {
@@ -154,6 +148,17 @@ export default new Vuex.Store({
           store.dispatch('updateUsersTeam')
         })
       }
+    },
+    async joinRoom(store, rid) {
+      const { name, uid, roomId } = store.state
+      if (rid !== roomId) {
+        store.commit('resetTeams')
+      }
+      const roomInfo = await getRoomInfo(rid)
+      store.commit('addRoomInfo', roomInfo)
+      store.commit('setRoomId', rid)
+      store.dispatch('listenForWebsocket')
+      socket.emit('enter-room', { rid, id: uid, name })
     },
     endSocket() {
       socket.off('users')
@@ -174,7 +179,7 @@ export default new Vuex.Store({
       socket.on('created-room', rid => {
         socket.off('created-room')
         router.push(`/preparation/${rid}`)
-        store.commit('enterPreparation', rid)
+        store.commit('setRoomId', rid)
       })
     },
     runAction(store, { action, id }) {
