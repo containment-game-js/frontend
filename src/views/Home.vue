@@ -97,7 +97,6 @@ import CardFooter from '@/components/Card/Footer.vue'
 import Grid from '@/components/Grid.vue'
 import Toggler from '@/components/Toggler.vue'
 import Layout from '@/components/Layout.vue'
-import { socket } from '@/services/socket.io'
 
 export default {
   components: {
@@ -151,7 +150,7 @@ export default {
     },
   },
   watch: {
-    rooms(oldRooms, newRooms) {
+    rooms() {
       if (Date.now() - this.lastTime < 1000) {
         setTimeout(() => (this.updatingRooms = false), 1000)
       } else {

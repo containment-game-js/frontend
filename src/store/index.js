@@ -103,8 +103,8 @@ export default new Vuex.Store({
       store.commit('addEngine', engine)
       router.push(`/game/${store.state.roomId}`)
     },
-    leaveRoom(store) {
-      const { name, roomId } = store.state
+    leaveRoom() {
+      // const { name, roomId } = store.state
       // socket.emit('leave-room', { name, rid: roomId })
     },
     async joinRoom(store, rid) {

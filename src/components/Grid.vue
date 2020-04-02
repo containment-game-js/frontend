@@ -72,7 +72,6 @@ export default {
     },
     classNames() {
       const { contrast, gap, border, justify } = this
-      const grid = true
       const gridGapName = `gap-${gap}`
       const justifyItemsName = `justify-${justify}`
       return {

@@ -90,8 +90,6 @@
 </template>
 
 <script>
-import { socket } from '@/services/socket.io'
-import { connectionURL } from '@/services/backend'
 import Layout from '@/components/Layout.vue'
 import Card from '@/components/Card.vue'
 import CardHeader from '@/components/Card/Header.vue'
