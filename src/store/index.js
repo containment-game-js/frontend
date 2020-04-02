@@ -121,6 +121,16 @@ export default new Vuex.Store({
       // socket.emit('leave-room', { name, rid: roomId })
     },
     async joinRoom(store, rid) {
+      socket.on('state', ({ state }) => {
+        if (!store.state.isHost) {
+          if (state !== 'start') {
+            store.state.teams = state.teams
+            store.state.spies = state.spies
+          } else {
+            router.push(`/game/${rid}`)
+          }
+        }
+      })
       const { name, uid, roomId } = store.state
       if (rid !== roomId) {
         store.commit('resetTeams')
@@ -136,16 +146,6 @@ export default new Vuex.Store({
         store.commit('updateRoomInfoPlayers', users)
         if (store.state.isHost) {
           store.dispatch('updateUsersTeam')
-        }
-      })
-      socket.on('state', ({ state }) => {
-        if (!store.state.isHost) {
-          if (state !== 'start') {
-            store.state.teams = state.teams
-            store.state.spies = state.spies
-          } else {
-            router.push(`/game/${rid}`)
-          }
         }
       })
       if (store.state.isHost) {
