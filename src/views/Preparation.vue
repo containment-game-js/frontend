@@ -290,6 +290,10 @@ export default {
   margin-bottom: 6px;
 }
 
+.player-name:last-child {
+  margin-bottom: 0;
+}
+
 .clicker {
   position: absolute;
   font-weight: 500;

@@ -1,36 +1,86 @@
 <template lang="html">
-  <layout full>
+  <layout full class="code-names-colors">
     <template v-slot:navbar>
       <div class="code-inline mar-x">Navbar Room id: {{ rid }}</div>
-      <div>Turn: {{ viewState.turn }}</div>
-      <div>
+      <div class="mar-x">
+        Turn:
+        <span class="highlight" :class="viewState.turn">{{
+          viewState.turn
+        }}</span>
+      </div>
+      <div class="mar-x">
         Spy or Player:
+        <font-awesome-icon :icon="userIcon" />
         {{ viewState.spyToTalk ? 'Spy' : 'Players' }}
       </div>
-      <div class="">Team: {{ team }}</div>
+      <div class="mar-x">
+        Team: <span class="highlight" :class="team">{{ team }}</span>
+      </div>
     </template>
     <template v-slot:sidebar>
-      Sidebar
-      <div class="player" v-for="p in roomInfo.players" :key="p.id">
-        {{ p.name }}
-      </div>
-      <div v-if="isSpy && isTurn && viewState.spyToTalk">
-        <h2>Hint</h2>
-        <label>
-          Word
-          <input type="text" name="" v-model="hint" />
-        </label>
-        <br />
-        <label>
-          Number
-          <input type="number" name="" v-model.number="numberToGuess" />
-        </label>
-        <button type="button" @click="sendHint">Send hint</button>
-      </div>
-      <div class="">
-        <h2>HINT</h2>
-        <div class="">Word: {{ viewState.hint }}</div>
-        <div class="">Number: {{ viewState.numberToGuess }}</div>
+      <div class="pad sidebar">
+        <div class="pad-y">
+          Can I play?
+          <div class="highlight" :class="{ green: canPlay, grey: !canPlay }">
+            {{ canPlay ? 'Yes' : 'No' }}
+          </div>
+        </div>
+        <div class="pad-y">
+          <h3>Teams</h3>
+          <div class="red pad mar-y border-radius">
+            <div class="player-name" v-for="p in redPlayers" :key="p.id">
+              {{ p.name }}
+            </div>
+          </div>
+          <div class="blue pad mar-y border-radius">
+            <div class="player-name" v-for="p in bluePlayers" :key="p.id">
+              {{ p.name }}
+            </div>
+          </div>
+        </div>
+        <div class="pad-y" v-if="isSpy && isTurn && viewState.spyToTalk">
+          <h3>Enter a hint</h3>
+          <label class="s-pad-y">
+            Word
+            <input
+              type="text"
+              class="s-pad xs-mar-top input"
+              v-model.trim="hint"
+              @keydown.space.prevent
+            />
+          </label>
+          <label class="s-pad-y">
+            Number
+            <input
+              type="number"
+              class="s-pad xs-mar-top input"
+              v-model.number="numberToGuess"
+              min="1"
+            />
+          </label>
+          <custom-button
+            class="mar-y"
+            @click="sendHint"
+            :disabled="
+              numberToGuess === 0 || hint === '' || numberToGuess === ''
+            "
+          >
+            Send hint
+          </custom-button>
+        </div>
+        <div class="pad-y">
+          <h3>Actual hint</h3>
+          <div class="s-pad-y">
+            Word:
+            <span class="code-inline">{{
+              viewState.hint || 'En attente...'
+            }}</span>
+          </div>
+          <div class="s-pad-y">
+            Number:
+            <span class="code-inline">{{ viewState.numberToGuess || -1 }}</span>
+          </div>
+        </div>
       </div>
     </template>
     <div class="board">
@@ -55,10 +105,12 @@
 
 <script>
 import Layout from '@/components/Layout.vue'
+import Button from '@/components/Button.vue'
 import { socket } from '@/services/socket.io'
 
 export default {
   components: {
+    CustomButton: Button,
     Layout,
   },
   props: {
@@ -76,7 +128,7 @@ export default {
     this.$store.dispatch('leaveRoom')
   },
   data() {
-    return { hint: '', numberToGuess: 0 }
+    return { hint: '', numberToGuess: 1 }
   },
   methods: {
     sendHint() {
@@ -185,14 +237,49 @@ export default {
     isTurn() {
       return this.viewState.turn === this.team || false
     },
+    userIcon() {
+      return this.viewState.spyToTalk ? 'user-secret' : 'users'
+    },
+    canPlay() {
+      return (
+        this.isTurn && (this.viewState.spyToTalk ? this.isSpy : !this.isSpy)
+      )
+    },
+    redPlayers() {
+      return this.viewState.players.filter(({ team }) => team === 'red')
+    },
+    bluePlayers() {
+      return this.viewState.players.filter(({ team }) => team === 'blue')
+    },
   },
 }
 </script>
 
 <style lang="css" scoped>
+.code-names-colors {
+  --red: rgb(255, 68, 68);
+  --blue: rgb(94, 146, 247);
+  --green: rgb(98, 193, 64);
+  --grey: rgb(119, 119, 119);
+  --brown: rgb(203, 180, 153);
+  --black: rgb(75, 75, 75);
+  --white: rgb(255, 255, 255);
+}
+
+label {
+  display: block;
+}
+
+.highlight {
+  padding: 3px 6px;
+  color: var(--white);
+  border-radius: 5px;
+  display: inline-block;
+}
+
 .board {
   grid-area: board;
-  background: #eee;
+  background: var(--background);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   grid-template-rows: repeat(5, 1fr);
@@ -206,29 +293,46 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: #d9d9d9 0px 0px 5px 1px;
+  box-shadow: var(--primary) 0px 0px 5px 1px;
   padding: 15px;
   transition: all 1s;
+  color: #112d4e;
+}
+
+.icon {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 3px;
 }
 
 .red {
-  background-color: rgb(255, 68, 68);
+  background: var(--red);
 }
 
 .blue {
-  background-color: rgb(94, 146, 247);
+  background: var(--blue);
 }
 
 .brown {
-  background-color: rgb(203, 180, 153);
+  background: var(--brown);
 }
 
 .black {
-  background-color: rgb(75, 75, 75);
+  background: var(--black);
 }
 
 .white {
-  background-color: white;
+  background: var(--white);
+}
+
+.green {
+  background: var(--green);
+}
+
+.grey {
+  background: var(--grey);
 }
 
 .none-clickable {
@@ -254,5 +358,30 @@ export default {
 
 .card.hidden > div {
   opacity: 0;
+}
+
+.player-name {
+  font-weight: 500;
+  font-size: 0.9rem;
+  background: var(--primary);
+  padding: 3px 6px;
+  border-radius: 5px;
+  margin-bottom: 6px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.sidebar {
+  border-right: 1px solid var(--primary);
+  height: 100%;
+}
+
+.player-name:last-child {
+  margin-bottom: 0;
+}
+
+.input {
+  border: 1px solid var(--primary);
+  border-radius: 5px;
 }
 </style>

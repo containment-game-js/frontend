@@ -77,6 +77,18 @@ h6 {
   padding: 12px;
 }
 
+.s-pad {
+  padding: 6px;
+}
+
+.l-pad {
+  padding: 24px;
+}
+
+.xs-mar-top {
+  margin-top: 3px;
+}
+
 .pad-bottom {
   padding-bottom: 6px;
 }
@@ -89,6 +101,16 @@ h6 {
 .pad-x {
   padding-right: 12px;
   padding-left: 12px;
+}
+
+.s-pad-y {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.s-pad-x {
+  padding-right: 6px;
+  padding-left: 6px;
 }
 
 .mar {
@@ -116,5 +138,9 @@ h6 {
   padding: 3px 6px;
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
     monospace;
+}
+
+.border-radius {
+  border-radius: 5px;
 }
 </style>
