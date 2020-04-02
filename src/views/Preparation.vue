@@ -23,10 +23,40 @@
       <card-header>{{ $t('preparation.title.spies') }}</card-header>
       <row>
         <card-content class="separator">
-          {{ $t('preparation.card.red') }} {{ spies.red }}
+          {{ $t('preparation.card.red') }}
+          <select
+            class="pad-x mar-x"
+            v-if="isHost"
+            :value="spies.red"
+            @input="updateSpy($event.target.value, 'red')"
+          >
+            <option
+              v-for="player in redPlayers"
+              :key="player.id"
+              :value="player.id"
+            >
+              {{ player.name }}
+            </option>
+          </select>
+          <div v-else>{{ redSpy }}</div>
         </card-content>
         <card-content>
-          {{ $t('preparation.card.blue') }} {{ spies.blue }}
+          {{ $t('preparation.card.blue') }}
+          <select
+            class="pad-x mar-x"
+            v-if="isHost"
+            :value="spies.blue"
+            @input="updateSpy($event.target.value, 'blue')"
+          >
+            <option
+              v-for="player in bluePlayers"
+              :key="player.id"
+              :value="player.id"
+            >
+              {{ player.name }}
+            </option>
+          </select>
+          <div v-else>{{ blueSpy }}</div>
         </card-content>
       </row>
     </card>
@@ -109,6 +139,9 @@ export default {
     this.$store.dispatch('endSocket')
   },
   methods: {
+    updateSpy(pid, team) {
+      this.$store.dispatch('updateSpy', { team, pid })
+    },
     updateOwnTeam(action) {
       this.$store.dispatch('updateOwnTeam', action)
     },
@@ -128,7 +161,12 @@ export default {
         return 'You'
       } else {
         const { host, players } = this.roomInfo
-        return players.find(({ id }) => id === host).name
+        const player = players.find(({ id }) => id === host)
+        if (player) {
+          return player.name
+        } else {
+          return 'None'
+        }
       }
     },
     teams() {
@@ -136,6 +174,24 @@ export default {
     },
     spies() {
       return this.$store.state.spies
+    },
+    redSpy() {
+      const { spies, roomInfo } = this
+      const player = roomInfo.players.find(({ id }) => id === spies.red)
+      if (player) {
+        return player.name
+      } else {
+        return 'None'
+      }
+    },
+    blueSpy() {
+      const { spies, roomInfo } = this
+      const player = roomInfo.players.find(({ id }) => id === spies.blue)
+      if (player) {
+        return player.name
+      } else {
+        return 'None'
+      }
     },
     bluePlayers() {
       return this.roomInfo.players.filter(player =>

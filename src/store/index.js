@@ -80,9 +80,22 @@ export default new Vuex.Store({
       temp.add(id)
       state.teams[action] = [...temp]
       state.teams[otherTeam] = state.teams[otherTeam].filter(i => i !== id)
+      if (!state.spies[action]) {
+        state.spies[action] = id
+      }
+      if (state.spies[otherTeam] === id) {
+        state.spies[otherTeam] = state.teams[otherTeam][0] || null
+      }
+    },
+    updateSpy(state, { pid, team }) {
+      state.spies[team] = pid
     },
   },
   actions: {
+    updateSpy(store, { pid, team }) {
+      store.commit('updateSpy', { pid, team })
+      store.dispatch('updateUsersTeam')
+    },
     async updateRooms(store) {
       const response = await fetch(`${connectionURL()}/get-rooms`)
       const rooms = await response.json()

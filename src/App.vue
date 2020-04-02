@@ -90,4 +90,22 @@ h6 {
   padding-right: 12px;
   padding-left: 12px;
 }
+
+.mar {
+  margin: 12px;
+}
+
+.mar-bottom {
+  margin-bottom: 6px;
+}
+
+.mar-y {
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.mar-x {
+  margin-right: 12px;
+  margin-left: 12px;
+}
 </style>
