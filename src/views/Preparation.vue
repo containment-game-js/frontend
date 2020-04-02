@@ -112,9 +112,14 @@
       </card-footer>
     </card>
     <div class="launch" v-if="isHost">
-      <button class="button" :disabled="!isLaunchable" @click="launchGame">
+      <a
+        :href="`/game/${rid}`"
+        class="button"
+        :class="{ disabled: !isLaunchable }"
+        @click.prevent="launchGame"
+      >
         {{ $t('preparation.launchNow') }}
-      </button>
+      </a>
     </div>
   </layout>
 </template>
@@ -242,6 +247,7 @@ export default {
 .players {
   height: 100%;
   width: 100%;
+  z-index: 1;
 }
 
 .background-box {
@@ -292,11 +298,23 @@ export default {
 }
 
 .button {
+  display: block;
   width: 100%;
   border: none;
   font-size: 1rem;
   padding: 12px;
   border-radius: 5px;
   background: var(--primary);
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.button.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.6;
 }
 </style>
