@@ -2,7 +2,7 @@
   <layout>
     <h1 class="pad-y">
       {{ $t('preparation.title.welcome') }}
-      <span class="room-name">{{ roomInfo.name }}</span>
+      <span class="code-inline">{{ roomInfo.name }}</span>
     </h1>
     <grid pad-y templateColumns="auto 1fr" border>
       <div>{{ $t('preparation.info.private') }}</div>
@@ -134,8 +134,18 @@ import Grid from '@/components/Grid.vue'
 import Row from '@/components/Row.vue'
 
 export default {
-  components: { Layout, Card, CardHeader, CardContent, CardFooter, Grid, Row },
-  props: { rid: String },
+  components: {
+    Layout,
+    Card,
+    CardHeader,
+    CardContent,
+    CardFooter,
+    Grid,
+    Row,
+  },
+  props: {
+    rid: String,
+  },
   mounted() {
     this.$store.dispatch('endSocket')
     this.$store.dispatch('joinRoom', this.rid)
@@ -265,12 +275,6 @@ export default {
 
 .blue {
   background: lightblue;
-}
-
-.room-name {
-  background: var(--primary);
-  border-radius: 5px;
-  padding: 3px 6px;
 }
 
 .separator {

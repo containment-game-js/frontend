@@ -108,4 +108,13 @@ h6 {
   margin-right: 12px;
   margin-left: 12px;
 }
+
+.code-inline {
+  background: var(--primary);
+  color: inherit;
+  border-radius: 5px;
+  padding: 3px 6px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
+}
 </style>
