@@ -1,95 +1,90 @@
 <template lang="html">
-  <div>
-    <nav class="navbar pad">
-      <h1>Containment Game</h1>
-    </nav>
-    <main class="main pad">
-      <card pad-y>
-        <card-header>{{ $t('home.title.username') }}</card-header>
-        <card-content>
-          <input
-            class="full"
-            @keydown.space.prevent
-            @input="$store.commit('updateName', $event.target.value)"
-            :value="$store.state.name"
+  <layout>
+    <card pad-y>
+      <card-header>{{ $t('home.title.username') }}</card-header>
+      <card-content>
+        <input
+          class="full"
+          @keydown.space.prevent
+          @input="$store.commit('updateName', $event.target.value)"
+          :value="$store.state.name"
+        />
+      </card-content>
+    </card>
+    <card pad-y>
+      <card-header>{{ $t('home.title.enterOrJoin') }}</card-header>
+      <card-content :pad="false">
+        <row grow>
+          <div class="separator pad">
+            <row full grow align="center">
+              <div>
+                <p>{{ $t('home.paragraph.createRoom') }}</p>
+                <toggler
+                  style="padding-top: 6px;"
+                  :label="$t('home.button.private')"
+                  v-model="privateRoom"
+                />
+              </div>
+              <button class="button" @click="create">
+                {{ $t('home.button.createRoom') }}
+              </button>
+            </row>
+          </div>
+          <div class="pad">
+            <row full grow align="center">
+              <p>{{ $t('home.paragraph.joinRoom') }}</p>
+              <button class="button" @click="join">
+                {{ $t('home.button.joinRoom') }}
+              </button>
+            </row>
+          </div>
+        </row>
+      </card-content>
+    </card>
+    <card pad-y>
+      <card-header>
+        <row align="center" space>
+          {{ $tc('home.title.publicRooms', rooms.length) }}
+          <refresh-ccw-icon
+            size="1x"
+            :class="{ refresh: true, rotating: updatingRooms }"
+            @click="updateRooms"
           />
-        </card-content>
-      </card>
-      <card pad-y>
-        <card-header>{{ $t('home.title.enterOrJoin') }}</card-header>
-        <card-content :pad="false">
-          <row grow>
-            <div class="separator pad">
-              <row full grow align="center">
-                <div>
-                  <p>{{ $t('home.paragraph.createRoom') }}</p>
-                  <toggler
-                    style="padding-top: 6px;"
-                    :label="$t('home.button.private')"
-                    v-model="privateRoom"
-                  />
+        </row>
+      </card-header>
+      <card-content>
+        <div v-if="rooms.length === 0">{{ $t('home.paragraph.noRoom') }}</div>
+        <grid v-else :columns="3" gap="medium">
+          <a
+            @click.prevent="enterRoom(room)"
+            :href="`/preparation/${room.id}`"
+            class="room-card"
+            v-for="room in rooms"
+            :key="room.id"
+          >
+            <card contrast>
+              <card-header class="room-card-title">
+                {{ room.name }}
+              </card-header>
+              <card-content>
+                <h4 class="pad-bottom">
+                  {{ $tc('home.title.players', room.players.length) }}
+                </h4>
+                <div
+                  :key="player.name + room.id"
+                  v-for="player in room.players"
+                  class="room-card-player"
+                >
+                  {{ player.name }}
                 </div>
-                <button class="button" @click="create">
-                  {{ $t('home.button.createRoom') }}
-                </button>
-              </row>
-            </div>
-            <div class="pad">
-              <row full grow align="center">
-                <p>{{ $t('home.paragraph.joinRoom') }}</p>
-                <button class="button" @click="join">
-                  {{ $t('home.button.joinRoom') }}
-                </button>
-              </row>
-            </div>
-          </row>
-        </card-content>
-      </card>
-      <card pad-y>
-        <card-header>
-          <row align="center" space>
-            {{ $tc('home.title.publicRooms', rooms.length) }}
-            <refresh-ccw-icon
-              size="1x"
-              :class="{ refresh: true, rotating: updatingRooms }"
-              @click="updateRooms"
-            />
-          </row>
-        </card-header>
-        <card-content>
-          <div v-if="rooms.length === 0">{{ $t('home.paragraph.noRoom') }}</div>
-          <grid v-else :columns="3" gap="medium">
-            <a
-              @click.prevent="enterRoom(room)"
-              :href="`/preparation/${room.id}`"
-              class="room-card"
-              v-for="room in rooms"
-              :key="room.id"
-            >
-              <card contrast>
-                <card-header class="room-card-title">
-                  {{ room.name }}
-                </card-header>
-                <card-content>
-                  <h4 class="pad-bottom">
-                    {{ $tc('home.title.players', room.players.length) }}
-                  </h4>
-                  <div
-                    :key="player.name + room.id"
-                    v-for="player in room.players"
-                    class="room-card-player"
-                  >
-                    {{ player.name }}
-                  </div>
-                </card-content>
-                <card-footer>{{ $t('home.button.cardJoin') }}</card-footer>
-              </card>
-            </a>
-          </grid>
-        </card-content>
-      </card>
-    </main>
-  </div>
+              </card-content>
+              <card-footer>{{ $t('home.button.cardJoin') }}</card-footer>
+            </card>
+          </a>
+        </grid>
+      </card-content>
+    </card>
+  </layout>
 </template>
 
 <script>
@@ -101,6 +96,7 @@ import CardHeader from '@/components/Card/Header.vue'
 import CardFooter from '@/components/Card/Footer.vue'
 import Grid from '@/components/Grid.vue'
 import Toggler from '@/components/Toggler.vue'
+import Layout from '@/components/Layout.vue'
 import { socket } from '@/services/socket.io'
 
 export default {
@@ -113,6 +109,7 @@ export default {
     CardFooter,
     Grid,
     RefreshCcwIcon,
+    Layout,
   },
   mounted() {
     this.updateRooms()
@@ -165,11 +162,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.navbar {
-  border-bottom: 1px solid var(--primary);
-  display: flex;
-}
-
 .button {
   height: 100%;
   background: var(--primary);
@@ -181,21 +173,8 @@ export default {
   color: inherit;
 }
 
-.main {
-  max-width: 700px;
-  margin: auto;
-}
-
 .separator {
   border-right: 1px solid var(--primary);
-}
-
-.pad {
-  padding: 12px;
-}
-
-.pad-bottom {
-  padding-bottom: 6px;
 }
 
 .refresh {

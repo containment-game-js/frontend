@@ -72,4 +72,12 @@ h6 {
     transform: rotate(-360deg);
   }
 }
+
+.pad {
+  padding: 12px;
+}
+
+.pad-bottom {
+  padding-bottom: 6px;
+}
 </style>
