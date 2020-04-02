@@ -63,9 +63,7 @@
             :key="room.id"
           >
             <card contrast>
-              <card-header class="room-card-title">
-                {{ room.name }}
-              </card-header>
+              <card-header class="room-card-title">{{ room.name }}</card-header>
               <card-content>
                 <h4 class="pad-bottom">
                   {{ $tc('home.title.players', room.players.length) }}
