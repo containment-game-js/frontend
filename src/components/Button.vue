@@ -35,9 +35,6 @@ export default {
     link: Boolean,
     disabled: Boolean,
   },
-  mounted() {
-    console.log(this.disabled)
-  },
 }
 </script>
 

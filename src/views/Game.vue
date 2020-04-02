@@ -38,7 +38,7 @@
             </div>
           </div>
         </div>
-        <div class="pad-y" v-if="isSpy && isTurn && viewState.spyToTalk">
+        <div class="pad-y" v-if="isSpy">
           <h3>Enter a hint</h3>
           <label class="s-pad-y">
             Word
@@ -47,6 +47,7 @@
               class="s-pad xs-mar-top input"
               v-model.trim="hint"
               @keydown.space.prevent
+              :disabled="!canPlay"
             />
           </label>
           <label class="s-pad-y">
@@ -56,16 +57,27 @@
               class="s-pad xs-mar-top input"
               v-model.number="numberToGuess"
               min="1"
+              :disabled="!canPlay"
             />
           </label>
           <custom-button
             class="mar-y"
             @click="sendHint"
             :disabled="
-              numberToGuess === 0 || hint === '' || numberToGuess === ''
+              !canPlay ||
+              (numberToGuess === 0 || hint === '' || numberToGuess === '')
             "
           >
             Send hint
+          </custom-button>
+        </div>
+        <div class="pad-y" v-else>
+          <custom-button
+            :disabled="!canPlay || !viewState.canPass"
+            @click="pass"
+            class="mar-y"
+          >
+            Pass
           </custom-button>
         </div>
         <div class="pad-y">
@@ -135,7 +147,14 @@ export default {
       const { hint, numberToGuess, rid } = this
       const { uid } = this.$store.state
       const action = { type: 'talk', params: { hint, numberToGuess } }
+      this.numberToGuess = 1
+      this.hint = ''
       socket.emit('action', { id: uid, rid, action })
+    },
+    pass() {
+      const { rid } = this
+      const { uid } = this.$store.state
+      socket.emit('action', { id: uid, rid, action: { type: 'pass' } })
     },
     isFound(index) {
       return (
@@ -210,7 +229,7 @@ export default {
       return this.$store.state.roomInfo
     },
     viewState() {
-      return this.$store.state.gameState
+      return this.$store.state.gameState || {}
     },
     isHost() {
       return this.roomInfo.host === this.$store.state.uid
