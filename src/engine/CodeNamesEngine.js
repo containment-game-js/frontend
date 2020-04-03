@@ -19,7 +19,7 @@ const generateRandomCards = (beginner, murderer) => {
     const cond =
       murderer === index || blue.includes(index) || red.includes(index)
     if (cond) {
-      index += 1
+      index = (index + 1) % 25
       continue
     } else {
       if (blueOk) {
