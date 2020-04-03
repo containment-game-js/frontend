@@ -69,6 +69,20 @@
             </div>
           </div>
         </div>
+        <row align="center">
+          <span class="icon red" />
+          <span class="s-pad-x">
+            {{ $t('game.sidebar.remainingRedWords') }}
+          </span>
+          {{ remainingRedWords }}
+        </row>
+        <row align="center">
+          <span class="icon blue" />
+          <span class="s-pad-x">
+            {{ $t('game.sidebar.remainingBlueWords') }}
+          </span>
+          {{ remainingBlueWords }}
+        </row>
         <div class="pad-y" v-if="isSpy">
           <h3>{{ $t('game.sidebar.enterHint') }}</h3>
           <label class="s-pad-y">
@@ -170,6 +184,14 @@ import Layout from '@/components/Layout.vue'
 import Button from '@/components/Button.vue'
 import Row from '@/components/Row.vue'
 import { socket } from '@/services/socket.io'
+
+const howMuchToGuess = (color, { beginner }) => {
+  if (color === beginner) {
+    return 9
+  } else {
+    return 8
+  }
+}
 
 export default {
   components: {
@@ -329,6 +351,14 @@ export default {
     },
     bluePlayers() {
       return this.viewState.players.filter(({ team }) => team === 'blue')
+    },
+    remainingRedWords() {
+      const remainingToGuess = howMuchToGuess('red', this.viewState)
+      return remainingToGuess - this.viewState.foundRed.length
+    },
+    remainingBlueWords() {
+      const remainingToGuess = howMuchToGuess('blue', this.viewState)
+      return remainingToGuess - this.viewState.foundBlue.length
     },
   },
 }
