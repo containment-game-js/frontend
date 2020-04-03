@@ -419,9 +419,11 @@ label {
   align-items: center;
   justify-content: center;
   box-shadow: var(--primary) 0px 0px 5px 1px;
-  padding: 15px;
+  padding: 10px;
   transition: all 1s;
   color: #112d4e;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .icon {
@@ -482,7 +484,9 @@ label {
 }
 
 .card.hidden > div {
-  opacity: 0;
+  background: transparent;
+  color: var(--white);
+  opacity: 0.5;
 }
 
 .player-name {
