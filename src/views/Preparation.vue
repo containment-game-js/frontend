@@ -8,8 +8,10 @@
       <div>{{ $t('preparation.info.private') }}</div>
       <div v-if="roomInfo.privateRoom">{{ $t('preparation.info.true') }}</div>
       <div v-else>{{ $t('preparation.info.false') }}</div>
+      <div>{{ $t('preparation.info.roomId') }}</div>
+      <div>{{ rid }}</div>
       <div>{{ $t('preparation.info.host') }}</div>
-      <div>{{ this.host }}</div>
+      <div>{{ host }}</div>
     </grid>
     <card pad-y>
       <card-header>{{ $t('preparation.title.players') }}</card-header>

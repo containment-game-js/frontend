@@ -35,7 +35,8 @@
       "private": "Salle privée",
       "true": "True",
       "false": "False",
-      "host": "Hôte"
+      "host": "Hôte",
+      "roomId": "ID Salle"
     },
     "card": {
       "red": "Rouge :",

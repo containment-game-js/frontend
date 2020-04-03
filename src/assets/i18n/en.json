@@ -35,7 +35,8 @@
       "private": "Private Room",
       "true": "True",
       "false": "False",
-      "host": "Host"
+      "host": "Host",
+      "roomId": "Room ID"
     },
     "card": {
       "red": "Red:",
