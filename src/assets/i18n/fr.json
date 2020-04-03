@@ -1,4 +1,8 @@
 {
+  "red": "rouge",
+  "blue": "bleu",
+  "Red": "Rouge",
+  "Blue": "Bleu",
   "home": {
     "title": {
       "username": "Entrez votre nom d'utilisateur",
@@ -41,6 +45,38 @@
       "nonChoosed": "Indécis",
       "blueTeam": "Bleu",
       "clickMe": "Cliquez ici !"
+    }
+  },
+  "game": {
+    "navbar": {
+      "room": "ID Salle :",
+      "turn": "Tour :",
+      "spyOrPlayer": "Espion ou joueur : | Espion ou joueurs :",
+      "spy": "Espion",
+      "players": "Joueurs",
+      "team": "Équipe :"
+    },
+    "sidebar": {
+      "play": "Puis-je jouer ?",
+      "yes": "Oui",
+      "no": "Non",
+      "teams": "Équipes",
+      "enterHint": "Entrer un indice",
+      "word": "Mot",
+      "number": "Nombre",
+      "sendHint": "Envoyer l'indice",
+      "pass": "Passer",
+      "actualHint": "Indice actuel",
+      "givenWord": "Mot :",
+      "waiting": "En attente...",
+      "givenNumber": "Nombre :"
+    },
+    "main": {
+      "win": "Vous avez gagné !",
+      "lose": "Vous avez perdu !",
+      "anotherOne": "Encore une ?",
+      "backTeamSelection": "Retourner à la sélection des équipes",
+      "waitHost": "En attente du choix de l'hôte..."
     }
   }
 }

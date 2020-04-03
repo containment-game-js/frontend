@@ -1,4 +1,8 @@
 {
+  "red": "red",
+  "blue": "blue",
+  "Red": "Red",
+  "Blue": "Blue",
   "home": {
     "title": {
       "username": "Enter your username",
@@ -41,6 +45,38 @@
       "nonChoosed": "Non choosed",
       "blueTeam": "Blue",
       "clickMe": "Click me!"
+    }
+  },
+  "game": {
+    "navbar": {
+      "room": "Room ID:",
+      "turn": "Turn:",
+      "spyOrPlayer": "Spy or player: | Spy or players:",
+      "spy": "Spy",
+      "players": "Players",
+      "team": "Team:"
+    },
+    "sidebar": {
+      "play": "Can I play?",
+      "yes": "Yes",
+      "no": "No",
+      "teams": "Teams",
+      "enterHint": "Enter a hint",
+      "word": "Word",
+      "number": "Number",
+      "sendHint": "Send hint",
+      "pass": "Pass",
+      "actualHint": "Actual hint",
+      "givenWord": "Word:",
+      "waiting": "Waiting...",
+      "givenNumber": "Number:"
+    },
+    "main": {
+      "win": "You win!",
+      "lose": "You lost!",
+      "anotherOne": "Another one?",
+      "backTeamSelection": "Back to team selection",
+      "waitHost": "Wait for the host to choose..."
     }
   }
 }

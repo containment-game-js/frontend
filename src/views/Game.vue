@@ -1,34 +1,51 @@
 <template lang="html">
   <layout full class="code-names-colors">
     <template v-slot:navbar>
-      <div class="code-inline mar-x">Navbar Room id: {{ rid }}</div>
-      <div class="mar-x">
-        Turn:
-        <span class="highlight" :class="viewState.turn">{{
-          viewState.turn
-        }}</span>
+      <div class="code-inline mar-x">
+        {{ $t('game.navbar.room') }} {{ rid }}
       </div>
       <div class="mar-x">
-        Spy or Player:
+        {{ $t('game.navbar.turn') }}
+        <span
+          class="highlight"
+          style="text-transform: capitalize;"
+          :class="viewState.turn"
+        >
+          {{ $t(viewState.turn) }}
+        </span>
+      </div>
+      <div class="mar-x">
+        {{ $tc('game.navbar.spyOrPlayer', 2) }}
         <font-awesome-icon
           :icon="viewState.spyToTalk ? 'user-secret' : 'user'"
         />
-        {{ viewState.spyToTalk ? 'Spy' : 'Players' }}
+        {{
+          viewState.spyToTalk
+            ? $t('game.navbar.spy')
+            : $t('game.navbar.players')
+        }}
       </div>
       <div class="mar-x">
-        Team: <span class="highlight" :class="team">{{ team }}</span>
+        {{ $t('game.navbar.team') }}
+        <span
+          class="highlight"
+          style="text-transform: capitalize;"
+          :class="team"
+        >
+          {{ $t(team) }}
+        </span>
       </div>
     </template>
     <template v-slot:sidebar>
       <div class="pad sidebar">
         <div class="pad-y">
-          Can I play?
+          {{ $t('game.sidebar.play') }}
           <div class="highlight" :class="{ green: canPlay, grey: !canPlay }">
-            {{ canPlay ? 'Yes' : 'No' }}
+            {{ canPlay ? $t('game.sidebar.yes') : $t('game.sidebar.no') }}
           </div>
         </div>
         <div class="pad-y">
-          <h3>Teams</h3>
+          <h3>{{ $t('game.sidebar.teams') }}</h3>
           <div class="red pad mar-y border-radius">
             <div class="player-name" v-for="p in redPlayers" :key="p.id">
               <row space align="center">
@@ -53,9 +70,9 @@
           </div>
         </div>
         <div class="pad-y" v-if="isSpy">
-          <h3>Enter a hint</h3>
+          <h3>{{ $t('game.sidebar.enterHint') }}</h3>
           <label class="s-pad-y">
-            Word
+            {{ $t('game.sidebar.word') }}
             <input
               type="text"
               class="s-pad xs-mar-top input"
@@ -65,7 +82,7 @@
             />
           </label>
           <label class="s-pad-y">
-            Number
+            {{ $t('game.sidebar.number') }}
             <input
               type="number"
               class="s-pad xs-mar-top input"
@@ -82,7 +99,7 @@
               (numberToGuess === 0 || hint === '' || numberToGuess === '')
             "
           >
-            Send hint
+            {{ $t('game.sidebar.sendHint') }}
           </custom-button>
         </div>
         <div class="pad-y" v-else>
@@ -91,19 +108,19 @@
             @click="pass"
             class="mar-y"
           >
-            Pass
+            {{ $t('game.sidebar.pass') }}
           </custom-button>
         </div>
         <div class="pad-y">
-          <h3>Actual hint</h3>
+          <h3>{{ $t('game.sidebar.actualHint') }}</h3>
           <div class="s-pad-y">
-            Word:
-            <span class="code-inline">{{
-              viewState.hint || 'En attente...'
-            }}</span>
+            {{ $t('game.sidebar.givenWord') }}
+            <span class="code-inline">
+              {{ viewState.hint || $t('game.sidebar.waiting') }}
+            </span>
           </div>
           <div class="s-pad-y">
-            Number:
+            {{ $t('game.sidebar.givenNumber') }}
             <span class="code-inline">{{ viewState.numberToGuess || -1 }}</span>
           </div>
         </div>
@@ -112,27 +129,27 @@
     <div :class="viewState.winner ? 'xl-pad' : 'board'">
       <template>
         <h1 class="xl-pad win-lose-title" v-if="viewState.winner === team">
-          You win!
+          {{ $t('game.main.win') }}
         </h1>
         <h1
           class="xl-pad win-lose-title"
           v-else-if="viewState.winner === otherTeam"
         >
-          You lost!
+          {{ $t('game.main.lose') }}
         </h1>
       </template>
       <template v-if="viewState.winner !== null">
         <row v-if="isHost">
           <custom-button class="grow" @click="anotherGame">
-            Another one?
+            {{ $t('game.main.anotherOne') }}
           </custom-button>
           <div class="pad"></div>
           <custom-button class="grow" @click="backToTeamSelection">
-            Back to team selection
+            {{ $t('game.main.backTeamSelection') }}
           </custom-button>
         </row>
         <row v-else>
-          Wait for the host to choose...
+          {{ $t('game.main.waitHost') }}
         </row>
       </template>
       <div
