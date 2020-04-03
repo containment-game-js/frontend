@@ -69,7 +69,10 @@
       "actualHint": "Actual hint",
       "givenWord": "Word:",
       "waiting": "Waiting...",
-      "givenNumber": "Number:"
+      "givenNumber": "Number:",
+      "nothing": "None",
+      "remainingRedWords": "Remaining red words:",
+      "remainingBlueWords": "Remaining blue words:"
     },
     "main": {
       "win": "You win!",

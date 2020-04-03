@@ -69,7 +69,10 @@
       "actualHint": "Indice actuel",
       "givenWord": "Mot :",
       "waiting": "En attente...",
-      "givenNumber": "Nombre :"
+      "givenNumber": "Nombre :",
+      "nothing": "Aucun",
+      "remainingRedWords": "Mots rouges restants :",
+      "remainingBlueWords": "Mots bleus restants :"
     },
     "main": {
       "win": "Vous avez gagné !",

@@ -129,13 +129,13 @@
           <h3>{{ $t('game.sidebar.actualHint') }}</h3>
           <div class="s-pad-y">
             {{ $t('game.sidebar.givenWord') }}
-            <span class="code-inline">
-              {{ viewState.hint || $t('game.sidebar.waiting') }}
+            <span class="code-inline" :class="teamHintHighlight">
+              {{ displayHint }}
             </span>
           </div>
           <div class="s-pad-y">
             {{ $t('game.sidebar.givenNumber') }}
-            <span class="code-inline">{{ viewState.numberToGuess || -1 }}</span>
+            <span class="code-inline">{{ displayNumberToGuess }}</span>
           </div>
         </div>
       </div>
@@ -359,6 +359,22 @@ export default {
     remainingBlueWords() {
       const remainingToGuess = howMuchToGuess('blue', this.viewState)
       return remainingToGuess - this.viewState.foundBlue.length
+    },
+    displayNumberToGuess() {
+      const { numberToGuess, spyToTalk } = this.viewState
+      const shouldDisplay = numberToGuess > 0 && !spyToTalk
+      return shouldDisplay ? numberToGuess - 1 : this.$t('game.sidebar.nothing')
+    },
+    teamHintHighlight() {
+      const { spyToTalk, turn } = this.viewState
+      return {
+        highlight: !spyToTalk,
+        [turn]: !spyToTalk,
+      }
+    },
+    displayHint() {
+      const { spyToTalk, hint } = this.viewState
+      return spyToTalk ? this.$t('game.sidebar.waiting') : hint
     },
   },
 }
