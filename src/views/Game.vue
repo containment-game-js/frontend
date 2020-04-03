@@ -10,7 +10,9 @@
       </div>
       <div class="mar-x">
         Spy or Player:
-        <font-awesome-icon :icon="userIcon" />
+        <font-awesome-icon
+          :icon="viewState.spyToTalk ? 'user-secret' : 'user'"
+        />
         {{ viewState.spyToTalk ? 'Spy' : 'Players' }}
       </div>
       <div class="mar-x">
