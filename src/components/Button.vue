@@ -52,6 +52,7 @@ export default {
   color: inherit;
   text-align: center;
   transition: all 0.2s;
+  outline: none;
 }
 
 .button.disabled {
