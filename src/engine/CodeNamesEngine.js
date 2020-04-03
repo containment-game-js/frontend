@@ -89,29 +89,48 @@ const selectFoundByColor = color => {
   }
 }
 
+const allFound = (founded, cards) => {
+  if (cards.length === 0) {
+    return true
+  } else {
+    const [card, ...others] = cards
+    if (founded.includes(card)) {
+      return allFound(founded, others)
+    } else {
+      return false
+    }
+  }
+}
+
 const correctAnswer = (state, player, cardNumber) => {
   const otherTeam = otherColor(player.team)
   const numberToGuess = state.numberToGuess - 1
   const isOtherTurn = numberToGuess === 0
   const foundColor = selectFoundByColor(player.team)
+  const newFounded = [...state[foundColor], cardNumber]
+  const winner = allFound(newFounded, state[player.team]) ? player.team : null
   return {
     ...state,
-    [foundColor]: [...state[foundColor], cardNumber],
+    [foundColor]: newFounded,
     numberToGuess,
     canPass: true,
     turn: isOtherTurn ? otherTeam : state.turn,
     spyToTalk: isOtherTurn ? true : false,
+    winner,
   }
 }
 
 const opponentAnswer = (state, player, cardNumber) => {
   const otherTeam = otherColor(player.team)
   const foundColor = selectFoundByColor(otherTeam)
+  const newFounded = [...state[foundColor], cardNumber]
+  const winner = allFound(newFounded, state[otherTeam]) ? player.team : null
   return {
     ...state,
-    [foundColor]: [...state[foundColor], cardNumber],
+    [foundColor]: newFounded,
     turn: otherTeam,
     spyToTalk: true,
+    winner,
   }
 }
 
