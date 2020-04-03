@@ -77,6 +77,10 @@ h6 {
   padding: 12px;
 }
 
+.xl-pad {
+  padding: 48px;
+}
+
 .s-pad {
   padding: 6px;
 }
@@ -142,5 +146,9 @@ h6 {
 
 .border-radius {
   border-radius: 5px;
+}
+
+.grow {
+  flex: 1;
 }
 </style>

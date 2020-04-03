@@ -31,12 +31,24 @@
           <h3>Teams</h3>
           <div class="red pad mar-y border-radius">
             <div class="player-name" v-for="p in redPlayers" :key="p.id">
-              {{ p.name }}
+              <row space align="center">
+                {{ p.name }}
+                <font-awesome-icon
+                  style="color: #555;"
+                  :icon="p.spy ? 'user-secret' : 'user'"
+                />
+              </row>
             </div>
           </div>
           <div class="blue pad mar-y border-radius">
             <div class="player-name" v-for="p in bluePlayers" :key="p.id">
-              {{ p.name }}
+              <row space align="center">
+                {{ p.name }}
+                <font-awesome-icon
+                  style="color: #555;"
+                  :icon="p.spy ? 'user-secret' : 'user'"
+                />
+              </row>
             </div>
           </div>
         </div>
@@ -97,19 +109,25 @@
         </div>
       </div>
     </template>
-    <div class="board">
+    <div :class="viewState.winner ? 'xl-pad' : 'board'">
       <template>
-        <div class="win" v-if="viewState.winner === team">
-          WINNER
-        </div>
-        <div class="lose" v-else-if="viewState.winner === otherTeam">
-          LOSER
-        </div>
+        <h1 class="xl-pad win-lose-title" v-if="viewState.winner === team">
+          You win!
+        </h1>
+        <h1
+          class="xl-pad win-lose-title"
+          v-else-if="viewState.winner === otherTeam"
+        >
+          You lost!
+        </h1>
       </template>
       <template v-if="viewState.winner !== null">
         <row v-if="isHost">
-          <custom-button @click="anotherGame">Another one?</custom-button>
-          <custom-button @click="backToTeamSelection">
+          <custom-button class="grow" @click="anotherGame">
+            Another one?
+          </custom-button>
+          <div class="pad"></div>
+          <custom-button class="grow" @click="backToTeamSelection">
             Back to team selection
           </custom-button>
         </row>
@@ -428,5 +446,9 @@ label {
 .input {
   border: 1px solid var(--primary);
   border-radius: 5px;
+}
+
+.win-lose-title {
+  text-align: center;
 }
 </style>
