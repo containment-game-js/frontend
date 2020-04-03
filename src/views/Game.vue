@@ -2,7 +2,7 @@
   <layout full class="code-names-colors">
     <template v-slot:navbar>
       <div class="code-inline mar-x">
-        {{ $t('game.navbar.room') }} {{ rid }}
+        Code Names
       </div>
       <div class="mar-x">
         {{ $t('game.navbar.turn') }}
