@@ -33,9 +33,26 @@
           <div class="pad">
             <row full grow align="center">
               <p>{{ $t('home.paragraph.joinRoom') }}</p>
-              <button class="button" @click="join">
-                {{ $t('home.button.joinRoom') }}
-              </button>
+              <div style="display: flex; flex-direction: column; height: 100%;">
+                <input
+                  style="
+                    border: 1px solid var(--primary);
+                    border-radius: 5px;
+                    padding: 6px;
+                  "
+                  placeholder="4523890a-fc2c-4a78-808d-837523cfa8d7"
+                  @keydown.space.prevent
+                  v-model="inputRoomId"
+                />
+                <div class="s-pad" />
+                <button
+                  class="button"
+                  style="flex: 1;"
+                  @click="enterRoom({ id: inputRoomId })"
+                >
+                  {{ $t('home.button.joinRoom') }}
+                </button>
+              </div>
             </row>
           </div>
         </row>
@@ -114,6 +131,7 @@ export default {
   },
   data() {
     return {
+      inputRoomId: '',
       modal: false,
       privateRoom: false,
       updatingRooms: false,
