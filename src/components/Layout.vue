@@ -52,5 +52,10 @@ export default {
 .main {
   max-width: 700px;
   margin: auto;
+  position: relative;
+}
+
+.sidebar {
+  overflow: scroll;
 }
 </style>

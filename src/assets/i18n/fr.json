@@ -72,14 +72,18 @@
       "givenNumber": "Nombre :",
       "nothing": "Aucun",
       "remainingRedWords": "Mots rouges restants :",
-      "remainingBlueWords": "Mots bleus restants :"
+      "remainingBlueWords": "Mots bleus restants :",
+      "help": "Vous n'avez plus de mots, mais vous pouvez tenter de deviner un mot supplémentaire à l'aide des indices précédents ! Attention, si vous n'avez pas d'inspiration, vous feriez mieux de passer !"
     },
     "main": {
       "win": "Vous avez gagné !",
       "lose": "Vous avez perdu !",
       "anotherOne": "Encore une ?",
       "backTeamSelection": "Retourner à la sélection des équipes",
-      "waitHost": "En attente du choix de l'hôte..."
+      "waitHost": "En attente du choix de l'hôte...",
+      "yourTurn": "C’est à votre tour de jouer !",
+      "opponentTurn": "Ce n’est pas à votre tour de jouer !",
+      "initialization": "Le jeu s'initialise, se connecte au serveur et aux autres joueurs…"
     }
   }
 }

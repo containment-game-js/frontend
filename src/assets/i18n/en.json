@@ -72,14 +72,18 @@
       "givenNumber": "Number:",
       "nothing": "None",
       "remainingRedWords": "Remaining red words:",
-      "remainingBlueWords": "Remaining blue words:"
+      "remainingBlueWords": "Remaining blue words:",
+      "help": "You don’t have any words, but you can try to guess another word with the help of previous hints! Be careful, if you don’t have any inspiration, you should pass!"
     },
     "main": {
       "win": "You win!",
       "lose": "You lost!",
       "anotherOne": "Another one?",
       "backTeamSelection": "Back to team selection",
-      "waitHost": "Wait for the host to choose..."
+      "waitHost": "Wait for the host to choose...",
+      "yourTurn": "It’s your time to play!",
+      "opponentTurn": "It’s not your time to play!",
+      "initialization": "We’re initializing the game, setting up everything, and connecting to the server…"
     }
   }
 }

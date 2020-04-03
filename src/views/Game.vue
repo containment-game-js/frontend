@@ -35,6 +35,9 @@
           {{ $t(team) }}
         </span>
       </div>
+      <button type="button" name="button" @click="permuteOverlay">
+        Permuter
+      </button>
     </template>
     <template v-slot:sidebar>
       <div class="pad sidebar">
@@ -137,37 +140,41 @@
             {{ $t('game.sidebar.givenNumber') }}
             <span class="code-inline">{{ displayNumberToGuess }}</span>
           </div>
+          <p class="pad mar-y help" v-if="!isSpy && displayNumberToGuess === 0">
+            {{ $t('game.sidebar.help') }}
+          </p>
         </div>
       </div>
     </template>
-    <div :class="viewState.winner ? 'xl-pad' : 'board'">
-      <template>
-        <h1 class="xl-pad win-lose-title" v-if="viewState.winner === team">
-          {{ $t('game.main.win') }}
-        </h1>
-        <h1
-          class="xl-pad win-lose-title"
-          v-else-if="viewState.winner === otherTeam"
-        >
-          {{ $t('game.main.lose') }}
-        </h1>
-      </template>
-      <template v-if="viewState.winner !== null">
-        <row v-if="isHost">
-          <custom-button class="grow" @click="anotherGame">
-            {{ $t('game.main.anotherOne') }}
-          </custom-button>
-          <div class="pad"></div>
-          <custom-button class="grow" @click="backToTeamSelection">
-            {{ $t('game.main.backTeamSelection') }}
-          </custom-button>
-        </row>
-        <row v-else>
-          {{ $t('game.main.waitHost') }}
-        </row>
-      </template>
+    <div class="board">
+      <transition name="overlay">
+        <div class="overlay" v-if="overlayContent">
+          <div class="overlay-text" v-if="overlayContent !== 'finish'">
+            {{ overlayContent }}
+          </div>
+          <div v-if="winner !== null">
+            <h1 class="xl-pad win-lose-title" v-if="winner === team">
+              {{ $t('game.main.win') }}
+            </h1>
+            <h1 class="xl-pad win-lose-title" v-else-if="winner === otherTeam">
+              {{ $t('game.main.lose') }}
+            </h1>
+            <row v-if="isHost">
+              <custom-button class="grow" @click="anotherGame">
+                {{ $t('game.main.anotherOne') }}
+              </custom-button>
+              <div class="pad"></div>
+              <custom-button class="grow" @click="backToTeamSelection">
+                {{ $t('game.main.backTeamSelection') }}
+              </custom-button>
+            </row>
+            <row v-else>
+              {{ $t('game.main.waitHost') }}
+            </row>
+          </div>
+        </div>
+      </transition>
       <div
-        v-else
         v-for="(card, index) in (viewState || {}).cards"
         :class="`card ${correctCardColor(index)} ${canClick(index)}`"
         :key="card + index"
@@ -210,15 +217,49 @@ export default {
     if (isHost && NODE_ENV === 'development' && VUE_APP_MOCK_GAME) {
       this.$store.dispatch('launchGameMock')
     }
+    this.permuteOverlay(this.$t('game.main.initialization'))
   },
   beforeDestroy() {
     this.$store.dispatch('endSocket')
   },
   data() {
-    return { hint: '', numberToGuess: 1 }
+    return {
+      hint: '',
+      numberToGuess: 1,
+      overlayContent: null,
+      timeout: null,
+      previousTimeout: null,
+    }
   },
   methods: {
+    permuteOverlay(content) {
+      if (this.timeout) {
+        clearTimeout(this.previousTimeout)
+        this.previousTimeout = setTimeout(() => {
+          this.permuteOverlay(content)
+        }, 1000)
+      } else {
+        this.previousTimeout = null
+        this.overlayContent = content
+        this.timeout = setTimeout(() => {
+          this.overlayContent = null
+          this.timeout = null
+        }, 2000)
+      }
+    },
+    finishOverlay() {
+      if (this.timeout) {
+        setTimeout(() => {
+          this.finishOverlay()
+        }, 1000)
+      } else {
+        setTimeout(() => {
+          this.overlayContent = 'finish'
+        }, 2000)
+      }
+    },
     anotherGame: async function () {
+      this.overlayContent = null
       await this.$store.dispatch('launchGame')
       await this.$store.dispatch('dispatchState')
     },
@@ -342,9 +383,13 @@ export default {
       return this.viewState.spyToTalk ? 'user-secret' : 'users'
     },
     canPlay() {
-      return (
-        this.isTurn && (this.viewState.spyToTalk ? this.isSpy : !this.isSpy)
-      )
+      if (this.viewState.cards.length === 0) {
+        return null
+      } else {
+        return (
+          this.isTurn && (this.viewState.spyToTalk ? this.isSpy : !this.isSpy)
+        )
+      }
     },
     redPlayers() {
       return this.viewState.players.filter(({ team }) => team === 'red')
@@ -376,6 +421,23 @@ export default {
       const { spyToTalk, hint } = this.viewState
       return spyToTalk ? this.$t('game.sidebar.waiting') : hint
     },
+    winner() {
+      return this.viewState.winner
+    },
+  },
+  watch: {
+    canPlay(newValue) {
+      if (newValue) {
+        this.permuteOverlay(this.$t('game.main.yourTurn'))
+      } else {
+        this.permuteOverlay(this.$t('game.main.opponentTurn'))
+      }
+    },
+    winner(newValue, oldValue) {
+      if (newValue) {
+        this.finishOverlay()
+      }
+    },
   },
 }
 </script>
@@ -403,6 +465,7 @@ label {
 }
 
 .board {
+  position: relative;
   grid-area: board;
   background: var(--background);
   display: grid;
@@ -516,6 +579,48 @@ label {
 }
 
 .win-lose-title {
+  text-align: center;
+}
+
+.help {
+  background: var(--primary);
+  border-radius: 5px;
+}
+
+.overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  z-index: 10;
+  transition: all 0.2s;
+}
+
+.overlay-enter,
+.overlay-leave-to {
+  opacity: 0;
+}
+
+.overlay-fade-in {
+  opacity: 1;
+}
+
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.5s;
+}
+
+.overlay-enter, .overlay-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}
+
+.overlay-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  max-width: 500px;
   text-align: center;
 }
 </style>
