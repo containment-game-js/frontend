@@ -45,7 +45,7 @@ const generateEnginePlayers = ({ players, teams, spies }) => {
   })
 }
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     uid: getUid(),
     name: localStorage.getItem('username'),
@@ -265,3 +265,13 @@ export default new Vuex.Store({
   },
   modules: {},
 })
+
+socket.on('reconnect', () => {
+  const { name } = router.currentRoute
+  const values = ['Preparation', 'Game']
+  if (values.includes(name)) {
+    store.dispatch('joinRoom', store.state.roomId)
+  }
+})
+
+export default store
