@@ -422,20 +422,46 @@ export default {
     winner() {
       return this.viewState.winner
     },
+    playerTurn() {
+      if (this.canPlay === null) {
+        return null
+      } else {
+        const { spyToTalk, turn } = this.viewState
+        switch (turn) {
+          case 'blue':
+            return spyToTalk ? 'blue-spy' : 'blue-players'
+          case 'red':
+            return spyToTalk ? 'red-spy' : 'red-players'
+          default:
+            return null
+        }
+      }
+    },
   },
   watch: {
-    canPlay(newValue, oldValue) {
-      if ((!this.isSpy && newValue) || oldValue === null) {
-        this.permuteOverlay(this.$t('game.main.yourTurn'))
-      } else if (this.isSpy && newValue) {
-        this.permuteOverlay(this.$t('game.main.yourTurn'), 2000)
-      } else if (
-        (!newValue && oldValue === null) ||
-        (this.isSpy && !newValue)
-      ) {
-        this.permuteOverlay(this.$t('game.main.opponentTurn'))
-      } else {
-        this.permuteOverlay(this.$t('game.main.opponentTurn'), 2000)
+    playerTurn(newValue, oldValue) {
+      const { isSpy, team } = this
+      const delay = oldValue === null ? 0 : 2000
+      const yourTurn = this.$t('game.main.yourTurn')
+      const opponentTurn = this.$t('game.main.opponentTurn')
+      const selectContent = cond => (cond ? yourTurn : opponentTurn)
+      switch (newValue) {
+        case 'blue-spy': {
+          const content = selectContent(isSpy && team === 'blue')
+          return this.permuteOverlay(content, delay)
+        }
+        case 'blue-players': {
+          const content = selectContent(!isSpy && team === 'blue')
+          return this.permuteOverlay(content)
+        }
+        case 'red-spy': {
+          const content = selectContent(isSpy && team === 'red')
+          return this.permuteOverlay(content, delay)
+        }
+        case 'red-players': {
+          const content = selectContent(!isSpy && team === 'red')
+          return this.permuteOverlay(content)
+        }
       }
     },
     winner(newValue) {
