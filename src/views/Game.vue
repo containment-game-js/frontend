@@ -610,7 +610,8 @@ label {
   transition: opacity 0.5s;
 }
 
-.overlay-enter, .overlay-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.overlay-enter,
+.overlay-leave-to {
   opacity: 0;
 }
 
