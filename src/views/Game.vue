@@ -229,19 +229,21 @@ export default {
     }
   },
   methods: {
-    permuteOverlay(content) {
+    permuteOverlay(content, delay = 0) {
       if (this.timeout) {
         clearTimeout(this.previousTimeout)
         this.previousTimeout = setTimeout(() => {
-          this.permuteOverlay(content)
+          this.permuteOverlay(content, delay)
         }, 1000)
       } else {
-        this.previousTimeout = null
-        this.overlayContent = content
-        this.timeout = setTimeout(() => {
-          this.overlayContent = null
-          this.timeout = null
-        }, 2000)
+        setTimeout(() => {
+          this.previousTimeout = null
+          this.overlayContent = content
+          this.timeout = setTimeout(() => {
+            this.overlayContent = null
+            this.timeout = null
+          }, 2000)
+        }, delay)
       }
     },
     finishOverlay() {
@@ -380,12 +382,11 @@ export default {
       return this.viewState.spyToTalk ? 'user-secret' : 'users'
     },
     canPlay() {
-      if (this.viewState.cards.length === 0) {
+      const { viewState, isTurn, isSpy } = this
+      if (viewState.cards.length === 0) {
         return null
       } else {
-        return (
-          this.isTurn && (this.viewState.spyToTalk ? this.isSpy : !this.isSpy)
-        )
+        return isTurn && (viewState.spyToTalk ? isSpy : !isSpy)
       }
     },
     redPlayers() {
@@ -423,14 +424,21 @@ export default {
     },
   },
   watch: {
-    canPlay(newValue) {
-      if (newValue) {
+    canPlay(newValue, oldValue) {
+      if ((!this.isSpy && newValue) || oldValue === null) {
         this.permuteOverlay(this.$t('game.main.yourTurn'))
-      } else {
+      } else if (this.isSpy && newValue) {
+        this.permuteOverlay(this.$t('game.main.yourTurn'), 2000)
+      } else if (
+        (!newValue && oldValue === null) ||
+        (this.isSpy && !newValue)
+      ) {
         this.permuteOverlay(this.$t('game.main.opponentTurn'))
+      } else {
+        this.permuteOverlay(this.$t('game.main.opponentTurn'), 2000)
       }
     },
-    winner(newValue, oldValue) {
+    winner(newValue) {
       if (newValue) {
         this.finishOverlay()
       }
