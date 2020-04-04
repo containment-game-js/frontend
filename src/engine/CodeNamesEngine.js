@@ -39,7 +39,7 @@ const generateRandomCards = (beginner, murderer) => {
 }
 
 const init = () => {
-  const cards = new Array(25).fill(0).map(() => Dictionnary.random())
+  const cards = Dictionnary.random(25)
   const beginner = chooseWhoBegin()
   const murderer = getRandomInt(0, 25)
   const { blue, red } = generateRandomCards(beginner, murderer)
