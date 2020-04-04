@@ -156,6 +156,10 @@ const store = new Vuex.Store({
         router.push(`/game/${store.state.roomId}`)
       }
     },
+    kickUser(store, kid) {
+      const { roomId, uid } = store.state
+      socket.emit('kick', { kid, rid: roomId, id: uid })
+    },
     leaveRoom() {
       // const { name, roomId } = store.state
       // socket.emit('leave-room', { name, rid: roomId })
@@ -218,12 +222,25 @@ const store = new Vuex.Store({
         store.commit('resetTeams')
       }
       const roomInfo = await getRoomInfo(rid)
-      store.commit('addRoomInfo', roomInfo)
-      store.commit('setRoomId', rid)
-      store.dispatch('listenForWebsocket')
-      socket.emit('enter-room', { rid, id: uid, name })
+      if (roomInfo) {
+        store.commit('addRoomInfo', roomInfo)
+        store.commit('setRoomId', rid)
+        store.dispatch('listenForWebsocket')
+        socket.emit('enter-room', { rid, id: uid, name })
+        socket.on('kicked', () => {
+          router.push('/')
+          store.dispatch('endSocket')
+        })
+      } else {
+        router.push('/')
+      }
+    },
+    closeRoom(store) {
+      const { uid, roomId } = store.state
+      socket.emit('close-room', { id: uid, rid: roomId })
     },
     endSocket() {
+      socket.off('kicked')
       socket.off('users')
       socket.off('state')
       socket.off('action')

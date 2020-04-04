@@ -36,7 +36,10 @@
       "true": "True",
       "false": "False",
       "host": "Host",
-      "roomId": "Room ID"
+      "roomId": "Room ID",
+      "you": "You",
+      "close": "Close",
+      "closeButton": "Be careful, this button close the room!"
     },
     "card": {
       "red": "Red:",

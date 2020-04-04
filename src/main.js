@@ -11,6 +11,7 @@ import {
   faUserSecret,
   faUser,
   faUsers,
+  faTimesCircle,
 } from '@fortawesome/free-solid-svg-icons'
 
 Vue.config.productionTip = false
@@ -18,6 +19,7 @@ Vue.config.productionTip = false
 library.add(faUserSecret)
 library.add(faUser)
 library.add(faUsers)
+library.add(faTimesCircle)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

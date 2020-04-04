@@ -117,6 +117,16 @@ h6 {
   padding-left: 6px;
 }
 
+.s-mar-y {
+  margin-top: 6px;
+  margin-bottom: 6px;
+}
+
+.s-mar-x {
+  margin-right: 6px;
+  margin-left: 6px;
+}
+
 .mar {
   margin: 12px;
 }

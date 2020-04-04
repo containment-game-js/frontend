@@ -12,12 +12,33 @@
       <div>{{ rid }}</div>
       <div>{{ $t('preparation.info.host') }}</div>
       <div>{{ host }}</div>
+      <template v-if="isHost">
+        <div>{{ $t('preparation.info.close') }}</div>
+        <custom-button
+          @click="closeRoom"
+          style="
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+          "
+        >
+          {{ $t('preparation.info.closeButton') }}
+        </custom-button>
+      </template>
     </grid>
     <card pad-y>
       <card-header>{{ $t('preparation.title.players') }}</card-header>
       <card-content>
         <div v-for="player in roomInfo.players" :key="player.id">
-          {{ player.name }}
+          <div style="display: inline-block;" class="s-mar-y code-inline">
+            {{ player.name }}
+            <font-awesome-icon
+              v-if="isHost"
+              icon="times-circle"
+              @click="kickUser(player)"
+              style="cursor: pointer;"
+            />
+          </div>
         </div>
       </card-content>
     </card>
@@ -134,6 +155,7 @@ import CardContent from '@/components/Card/Content.vue'
 import CardFooter from '@/components/Card/Footer.vue'
 import Grid from '@/components/Grid.vue'
 import Row from '@/components/Row.vue'
+import Button from '@/components/Button.vue'
 
 export default {
   components: {
@@ -144,6 +166,7 @@ export default {
     CardFooter,
     Grid,
     Row,
+    CustomButton: Button,
   },
   props: {
     rid: String,
@@ -156,6 +179,12 @@ export default {
     this.$store.dispatch('endSocket')
   },
   methods: {
+    closeRoom() {
+      this.$store.dispatch('closeRoom')
+    },
+    kickUser(player) {
+      this.$store.dispatch('kickUser', player.id)
+    },
     updateSpy(pid, team) {
       this.$store.dispatch('updateSpy', { team, pid })
     },
@@ -175,7 +204,7 @@ export default {
     },
     host() {
       if (this.isHost) {
-        return 'You'
+        return this.$t('preparation.info.you')
       } else {
         const { host, players } = this.roomInfo
         const player = players.find(({ id }) => id === host)

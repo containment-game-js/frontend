@@ -36,7 +36,10 @@
       "true": "True",
       "false": "False",
       "host": "Hôte",
-      "roomId": "ID Salle"
+      "roomId": "ID Salle",
+      "you": "Vous",
+      "close": "Fermer",
+      "closeButton": "Attention, ce bouton ferme la salle pour tous!"
     },
     "card": {
       "red": "Rouge :",
