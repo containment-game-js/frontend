@@ -29,8 +29,8 @@
     <card pad-y>
       <card-header>{{ $t('preparation.title.players') }}</card-header>
       <card-content>
-        <div v-for="player in roomInfo.players" :key="player.id">
-          <div style="display: inline-block;" class="s-mar-y code-inline">
+        <span v-for="player in roomInfo.players" :key="player.id" class="s-pad">
+          <span class="s-mar-y code-inline">
             {{ player.name }}
             <font-awesome-icon
               v-if="isHost"
@@ -38,8 +38,8 @@
               @click="kickUser(player)"
               style="cursor: pointer;"
             />
-          </div>
-        </div>
+          </span>
+        </span>
       </card-content>
     </card>
     <card pad-y>

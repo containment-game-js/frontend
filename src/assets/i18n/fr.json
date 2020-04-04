@@ -42,7 +42,7 @@
       "roomId": "ID Salle",
       "you": "Vous",
       "close": "Fermer",
-      "closeButton": "Attention, ce bouton ferme la salle pour tous!"
+      "closeButton": "Attention, ce bouton ferme la salle pour tous !"
     },
     "card": {
       "red": "Rouge :",
