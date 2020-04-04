@@ -35,9 +35,6 @@
           {{ $t(team) }}
         </span>
       </div>
-      <button type="button" name="button" @click="permuteOverlay">
-        Permuter
-      </button>
     </template>
     <template v-slot:sidebar>
       <div class="pad sidebar">
