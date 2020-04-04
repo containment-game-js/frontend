@@ -8,6 +8,7 @@
           @keydown.space.prevent
           @input="$store.commit('updateName', $event.target.value)"
           :value="$store.state.name"
+          :placeholder="$t('home.input.username')"
         />
       </card-content>
     </card>
@@ -25,7 +26,12 @@
                   v-model="privateRoom"
                 />
               </div>
-              <button class="button" @click="create">
+              <button
+                class="button"
+                @click="create"
+                :disabled="!canJoin"
+                :style="{ cursor: canJoin ? 'pointer' : 'not-allowed' }"
+              >
                 {{ $t('home.button.createRoom') }}
               </button>
             </row>
@@ -49,6 +55,8 @@
                   class="button"
                   style="flex: 1;"
                   @click="enterRoom({ id: inputRoomId })"
+                  :disabled="!canJoin"
+                  :style="{ cursor: canJoin ? 'pointer' : 'not-allowed' }"
                 >
                   {{ $t('home.button.joinRoom') }}
                 </button>
@@ -78,6 +86,7 @@
             class="room-card"
             v-for="room in rooms"
             :key="room.id"
+            :style="{ cursor: canJoin ? 'pointer' : 'not-allowed' }"
           >
             <card contrast>
               <card-header class="room-card-title">{{ room.name }}</card-header>
@@ -145,14 +154,12 @@ export default {
       this.$store.dispatch('updateRooms')
     },
     create() {
-      const { name } = this.$store.state
-      if (name !== '') {
+      if (this.canJoin) {
         this.$store.dispatch('createRoom', this.privateRoom)
       }
     },
     enterRoom(room) {
-      const { name } = this.$store.state
-      if (name !== '') {
+      if (this.canJoin) {
         this.$router.push(`/preparation/${room.id}`)
       }
     },
@@ -163,6 +170,10 @@ export default {
   computed: {
     rooms() {
       return this.$store.state.rooms
+    },
+    canJoin() {
+      const { name } = this.$store.state
+      return name && name !== ''
     },
   },
   watch: {

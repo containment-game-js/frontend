@@ -20,6 +20,9 @@
       "createRoom": "Create room",
       "joinRoom": "Join room",
       "cardJoin": "Click on the card to join the game!"
+    },
+    "input": {
+      "username": "Enter your username here."
     }
   },
   "preparation": {

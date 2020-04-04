@@ -20,6 +20,9 @@
       "createRoom": "Créer une salle",
       "joinRoom": "Rejoindre une salle",
       "cardJoin": "Cliquez sur la carte pour se joindre à la partie !"
+    },
+    "input": {
+      "username": "Entrez votre nom d'utilisateur ici."
     }
   },
   "preparation": {
