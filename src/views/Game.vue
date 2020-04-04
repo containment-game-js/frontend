@@ -591,7 +591,7 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: var(--background);
   z-index: 10;
   transition: all 0.2s;
 }
