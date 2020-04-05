@@ -47,6 +47,7 @@ export default {
   top: 0;
   background: var(--background);
   align-items: center;
+  z-index: 1;
 }
 
 .main {
