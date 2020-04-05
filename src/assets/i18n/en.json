@@ -8,7 +8,8 @@
       "username": "Enter your username",
       "enterOrJoin": "Create or join room",
       "publicRooms": "Public room | Public room | Public rooms",
-      "players": "No Player | Player | Players"
+      "players": "No Player | Player | Players",
+      "private": "Private"
     },
     "paragraph": {
       "createRoom": "You can create a room public or private.",

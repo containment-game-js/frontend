@@ -89,7 +89,14 @@
             :style="{ cursor: canJoin ? 'pointer' : 'not-allowed' }"
           >
             <card contrast>
-              <card-header class="room-card-title">{{ room.name }}</card-header>
+              <card-header class="room-card-title">
+                <row space align="center">
+                  {{ room.name }}
+                  <span class="private-indicator" v-if="room.privateRoom">
+                    {{ $t('home.title.private') }}
+                  </span>
+                </row>
+              </card-header>
               <card-content>
                 <h4 class="pad-bottom">
                   {{ $tc('home.title.players', room.players.length) }}
@@ -224,5 +231,10 @@ export default {
 
 .room-card-player {
   line-height: 1.5;
+}
+
+.private-indicator {
+  font-weight: 400;
+  font-size: 0.6rem;
 }
 </style>
