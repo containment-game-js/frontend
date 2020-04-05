@@ -125,7 +125,8 @@ const store = new Vuex.Store({
       store.dispatch('updateUsersTeam')
     },
     async updateRooms(store) {
-      const response = await fetch(`${connectionURL()}/get-rooms`)
+      const { uid } = store.state
+      const response = await fetch(`${connectionURL()}/get-rooms?id=${uid}`)
       const rooms = await response.json()
       store.commit('addRooms', rooms)
     },
