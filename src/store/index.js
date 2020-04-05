@@ -284,10 +284,10 @@ const store = new Vuex.Store({
 })
 
 socket.on('reconnect', () => {
-  const { name } = router.currentRoute
+  const { name, params } = router.currentRoute
   const values = ['Preparation', 'Game']
   if (values.includes(name)) {
-    store.dispatch('joinRoom', store.state.roomId)
+    store.dispatch('joinRoom', params.rid)
   }
 })
 
