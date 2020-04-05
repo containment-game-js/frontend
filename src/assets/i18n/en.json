@@ -37,8 +37,8 @@
     },
     "info": {
       "private": "Private Room",
-      "true": "True",
-      "false": "False",
+      "true": "Private",
+      "false": "Public",
       "host": "Host",
       "roomId": "Room ID",
       "you": "You",

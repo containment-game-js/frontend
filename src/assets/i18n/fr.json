@@ -37,8 +37,8 @@
     },
     "info": {
       "private": "Salle privée",
-      "true": "True",
-      "false": "False",
+      "true": "Privée",
+      "false": "Publique",
       "host": "Hôte",
       "roomId": "ID Salle",
       "you": "Vous",
