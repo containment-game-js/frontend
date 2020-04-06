@@ -93,5 +93,9 @@
       "opponentTurn": "Ce n’est pas à votre tour de jouer !",
       "initialization": "Le jeu s'initialise, se connecte au serveur et aux autres joueurs…"
     }
+  },
+  "enterUsername": {
+    "title": "Visiblement, vous n'avez pas renseigné de nom d'utilisateur ! Faites-le ici pour pouvoir profiter du site !",
+    "letsGo": "C'est parti !"
   }
 }

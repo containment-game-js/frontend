@@ -54,6 +54,7 @@ export default {
   max-width: 700px;
   margin: auto;
   position: relative;
+  width: 100%;
 }
 
 .sidebar {

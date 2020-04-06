@@ -1,17 +1,6 @@
 <template lang="html">
   <layout>
-    <card pad-y>
-      <card-header>{{ $t('home.title.username') }}</card-header>
-      <card-content>
-        <input
-          class="full"
-          @keydown.space.prevent
-          @input="$store.commit('updateName', $event.target.value)"
-          :value="$store.state.name"
-          :placeholder="$t('home.input.username')"
-        />
-      </card-content>
-    </card>
+    <input-username />
     <card pad-y>
       <card-header>{{ $t('home.title.enterOrJoin') }}</card-header>
       <card-content :pad="false">
@@ -128,6 +117,7 @@ import CardFooter from '@/components/Card/Footer.vue'
 import Grid from '@/components/Grid.vue'
 import Toggler from '@/components/Toggler.vue'
 import Layout from '@/components/Layout.vue'
+import InputUsername from '@/views/Username/Card.vue'
 
 export default {
   components: {
@@ -140,6 +130,7 @@ export default {
     Grid,
     RefreshCcwIcon,
     Layout,
+    InputUsername,
   },
   mounted() {
     this.updateRooms()

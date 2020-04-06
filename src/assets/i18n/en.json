@@ -93,5 +93,9 @@
       "opponentTurn": "It’s not your time to play!",
       "initialization": "We’re initializing the game, setting up everything, and connecting to the server…"
     }
+  },
+  "enterUsername": {
+    "title": "Apparently, you don’t have username! Indicate it here to enjoy the site!",
+    "letsGo": "C'est parti !"
   }
 }
