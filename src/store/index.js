@@ -1,23 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import uuid from 'uuid/v4'
 import router from '@/router'
 import { socket } from '@/services/socket.io'
 import { connectionURL } from '@/services/backend'
+import * as storage from '@/services/storage'
 import { CodeNamesEngine } from '@/engine/CodeNamesEngine'
 
 Vue.use(Vuex)
-
-const getUid = () => {
-  const uid = localStorage.getItem('uid')
-  if (uid) {
-    return uid
-  } else {
-    const newId = uuid()
-    localStorage.setItem('uid', newId)
-    return newId
-  }
-}
 
 const otherColor = color => {
   if (color === 'blue') {
@@ -47,8 +36,8 @@ const generateEnginePlayers = ({ players, teams, spies }) => {
 
 const store = new Vuex.Store({
   state: {
-    uid: getUid(),
-    name: localStorage.getItem('username'),
+    uid: storage.getUid(),
+    name: storage.getUsername(),
     roomId: null,
     engine: null,
     rooms: [],
@@ -77,7 +66,7 @@ const store = new Vuex.Store({
     updateName(state, name) {
       const finalName = name.replace(/ /g, '')
       state.name = finalName
-      localStorage.setItem('username', finalName)
+      storage.setUsername(finalName)
     },
     setRoomId(state, rid) {
       state.roomId = rid
