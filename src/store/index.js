@@ -53,6 +53,12 @@ const store = new Vuex.Store({
       foundNeutral: [],
     },
   },
+  getters: {
+    validName(state) {
+      const { name } = state
+      return name && name !== ''
+    },
+  },
   mutations: {
     resetTeams(state) {
       state.teams = { red: [], blue: [] }
