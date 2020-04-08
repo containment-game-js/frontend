@@ -2,41 +2,52 @@ import { Engine } from '@/engine'
 import * as Dictionnary from './dictionary'
 import { getRandomInt } from './math'
 
+const BLUE = 'blue'
+const RED = 'red'
+
+const TEAM_COLORS = [BLUE, RED]
+
 const chooseWhoBegin = () => {
   if (Math.random() < 0.5) {
-    return 'blue'
+    return BLUE
   } else {
-    return 'red'
+    return RED
   }
 }
+
+const totalCards = 25
+const beginnerCardsNumber = 9
+const otherCardsNumber = 8
 
 const generateRandomCards = (beginner, murderer) => {
   const blue = []
   const red = []
-  let index = getRandomInt(0, 25)
-  while (blue.length + red.length < 17) {
-    const blueOk = blue.length === (beginner === 'blue' ? 9 : 8)
+  let index = getRandomInt(0, totalCards)
+  while (blue.length + red.length < beginnerCardsNumber + otherCardsNumber) {
+    const blueOk =
+      blue.length ===
+      (beginner === BLUE ? beginnerCardsNumber : otherCardsNumber)
     const isMurderer = murderer === index
     const isInBlue = blue.includes(index)
     const isInRed = red.includes(index)
     if (isMurderer || isInBlue || isInRed) {
-      index = (index + 1) % 25
+      index = (index + 1) % totalCards
     } else {
       if (blueOk) {
         red.push(index)
       } else {
         blue.push(index)
       }
-      index = getRandomInt(0, 25)
+      index = getRandomInt(0, totalCards)
     }
   }
   return { blue, red }
 }
 
 const init = locale => {
-  const cards = Dictionnary.random(25, locale)
+  const cards = Dictionnary.random(totalCards, locale)
   const beginner = chooseWhoBegin()
-  const murderer = getRandomInt(0, 25)
+  const murderer = getRandomInt(0, totalCards)
   const { blue, red } = generateRandomCards(beginner, murderer)
   return {
     cards,
@@ -69,15 +80,19 @@ const filter = (state, player, players) => {
 }
 
 const otherColor = color => {
-  if (color === 'blue') {
-    return 'red'
+  if (TEAM_COLORS.includes(color)) {
+    if (color === BLUE) {
+      return RED
+    } else {
+      return BLUE
+    }
   } else {
-    return 'blue'
+    return null
   }
 }
 
 const selectFoundByColor = color => {
-  if (color === 'blue') {
+  if (color === BLUE) {
     return 'foundBlue'
   } else {
     return 'foundRed'
@@ -217,4 +232,5 @@ const CodeNamesEngine = (players, locale, previousState) => {
   return Engine({ state, players, filter, actions: { guess, pass, talk } })
 }
 
-export { CodeNamesEngine }
+export default CodeNamesEngine
+export { CodeNamesEngine, BLUE, RED, TEAM_COLORS }
