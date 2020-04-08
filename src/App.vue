@@ -10,6 +10,7 @@
   --secondary: #3f72af;
   --primary: #dbe2ef;
   --background: #f9f7f7;
+  --secondary-rgb: 63, 114, 175;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -18,6 +19,7 @@
     --secondary: #3282b8;
     --primary: #0f4c75;
     --background: #1b262c;
+    --secondary-rgb: 50, 130, 184;
   }
 }
 
@@ -160,5 +162,29 @@ h6 {
 
 .grow {
   flex: 1;
+}
+
+.visible-s {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .visible-s {
+    display: block;
+  }
+}
+
+@keyframes pulse {
+  from {
+    box-shadow: 0px 0px 0px 0px rgba(var(--secondary-rgb), 0.2);
+  }
+
+  to {
+    box-shadow: 0px 0px 5px 5px rgba(var(--secondary-rgb), 0.2);
+  }
+}
+
+.pulse {
+  animation: pulse 2s infinite running;
 }
 </style>

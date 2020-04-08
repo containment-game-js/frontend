@@ -2,6 +2,10 @@
   <div class="layout" :class="{ full }">
     <nav class="navbar pad">
       <h1>Containment Game</h1>
+      <div class="code-inline mar-x">
+        <slot name="game" />
+      </div>
+      <div class="visible-s break mar" />
       <slot name="navbar" />
     </nav>
     <aside class="sidebar">
@@ -31,6 +35,14 @@ export default {
   grid-template-rows: auto 1fr;
 }
 
+@media (max-width: 900px) {
+  .break {
+    flex-basis: 100%;
+    height: 0;
+    border-bottom: 1px solid var(--primary);
+  }
+}
+
 .full {
   height: 100vh;
 }
@@ -48,6 +60,7 @@ export default {
   background: var(--background);
   align-items: center;
   z-index: 1;
+  flex-wrap: wrap;
 }
 
 .main {

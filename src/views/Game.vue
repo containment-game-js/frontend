@@ -1,9 +1,9 @@
 <template lang="html">
   <layout full class="code-names-colors">
+    <template v-slot:game>
+      Code Names
+    </template>
     <template v-slot:navbar>
-      <div class="code-inline mar-x">
-        Code Names
-      </div>
       <div class="mar-x">
         {{ $t('game.navbar.turn') }}
         <span
@@ -90,6 +90,7 @@
             <input
               type="text"
               class="s-pad xs-mar-top input"
+              :class="{ pulse: canPlay && hint === '' }"
               v-model.trim="hint"
               @keydown.space.prevent
               :disabled="!canPlay"
@@ -100,6 +101,7 @@
             <input
               type="number"
               class="s-pad xs-mar-top input"
+              :class="{ pulse: canPlay && hint === '' }"
               v-model.number="numberToGuess"
               min="1"
               :disabled="!canPlay"
@@ -112,6 +114,7 @@
               !canPlay ||
               (numberToGuess === 0 || hint === '' || numberToGuess === '')
             "
+            :pulse="canPlay && (numberToGuess > 0 && hint !== '')"
           >
             {{ $t('game.sidebar.sendHint') }}
           </custom-button>
@@ -121,6 +124,7 @@
             :disabled="!canPlay || !viewState.canPass"
             @click="pass"
             class="mar-y"
+            :pulse="canPlay && viewState.canPass"
           >
             {{ $t('game.sidebar.pass') }}
           </custom-button>
@@ -502,6 +506,12 @@ label {
   height: 100%;
 }
 
+@media (max-width: 900px) {
+  .board {
+    grid-gap: 10px;
+  }
+}
+
 .card {
   border-radius: 5px;
   display: flex;
@@ -513,6 +523,13 @@ label {
   color: #112d4e;
   font-size: 1.1rem;
   font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .card {
+    font-size: 0.9rem;
+    padding: 5px;
+  }
 }
 
 .icon {

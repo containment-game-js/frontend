@@ -2,7 +2,7 @@
   <button
     v-if="to === null"
     class="button"
-    :class="{ disabled }"
+    :class="{ disabled, pulse }"
     @click="$emit('click')"
   >
     <slot />
@@ -10,7 +10,7 @@
   <router-link
     v-else-if="to !== null && !link"
     class="button"
-    :class="{ disabled }"
+    :class="{ disabled, pulse }"
   >
     <slot />
   </router-link>
@@ -19,7 +19,7 @@
     :href="to"
     @click.prevent="$emit('click')"
     class="button"
-    :class="{ disabled }"
+    :class="{ disabled, pulse }"
   >
     <slot />
   </a>
@@ -34,6 +34,7 @@ export default {
     },
     link: Boolean,
     disabled: Boolean,
+    pulse: Boolean,
   },
 }
 </script>
