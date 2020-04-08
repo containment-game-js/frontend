@@ -134,7 +134,7 @@ const opponentAnswer = (state, player, cardNumber) => {
   const otherTeam = otherColor(player.team)
   const foundColor = selectFoundByColor(otherTeam)
   const newFounded = [...state[foundColor], cardNumber]
-  const winner = allFound(newFounded, state[otherTeam]) ? player.team : null
+  const winner = allFound(newFounded, state[otherTeam]) ? otherTeam : null
   return {
     ...state,
     [foundColor]: newFounded,
