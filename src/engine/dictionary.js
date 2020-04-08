@@ -16,16 +16,25 @@ const getNextInt = (words, got, int) => {
   }
 }
 
-const random = (howMuch = 1, locale = 'fr', got = [], foundWords = []) => {
-  const index = getNextInt(words[locale], got)
+const selectFinalLocale = locale => {
+  if (Object.keys(words).includes(locale)) {
+    return locale
+  } else {
+    return 'en'
+  }
+}
+
+const random = (howMuch = 1, locale, got = [], foundWords = []) => {
+  const finalLocale = selectFinalLocale(locale)
+  const index = getNextInt(words[finalLocale], got)
   if (howMuch < 2) {
     return [...foundWords, words[index]]
   } else {
     return random(
       howMuch - 1,
-      locale,
+      finalLocale,
       [...got, index],
-      [...foundWords, words[locale][index]]
+      [...foundWords, words[finalLocale][index]]
     )
   }
 }
