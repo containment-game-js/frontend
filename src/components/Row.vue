@@ -7,6 +7,7 @@
       'no-wrap': noWrap,
       full,
       [`align-${align}`]: true,
+      [`justify-${justify}`]: true,
     }"
   >
     <slot name="default" />
@@ -28,6 +29,14 @@ export default {
         return values.includes(value)
       },
     },
+    justify: {
+      type: String,
+      default: 'none',
+      validator(value) {
+        const values = ['none', 'center', 'between']
+        return values.includes(value)
+      },
+    },
   },
 }
 </script>
@@ -36,10 +45,6 @@ export default {
 .row {
   display: flex;
   flex-wrap: wrap;
-}
-
-.space {
-  justify-content: space-between;
 }
 
 .grow > * {
@@ -60,5 +65,17 @@ export default {
 
 .align-center {
   align-items: center;
+}
+
+.justify-none {
+  justify-content: stretch;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
 }
 </style>
