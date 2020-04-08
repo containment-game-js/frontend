@@ -1,4 +1,4 @@
-import { Engine } from './engine'
+import { Engine } from '@/engine'
 import * as Dictionnary from './dictionary'
 import { getRandomInt } from './math'
 
@@ -11,26 +11,21 @@ const chooseWhoBegin = () => {
 }
 
 const generateRandomCards = (beginner, murderer) => {
-  let blueOk = false
   const blue = []
   const red = []
   let index = getRandomInt(0, 25)
-  while (blue.length + red.length !== 17) {
-    const cond =
-      murderer === index || blue.includes(index) || red.includes(index)
-    if (cond) {
+  while (blue.length + red.length < 17) {
+    const blueOk = blue.length === (beginner === 'blue' ? 9 : 8)
+    const isMurderer = murderer === index
+    const isInBlue = blue.includes(index)
+    const isInRed = red.includes(index)
+    if (isMurderer || isInBlue || isInRed) {
       index = (index + 1) % 25
-      continue
     } else {
       if (blueOk) {
         red.push(index)
       } else {
         blue.push(index)
-        if (beginner === 'blue' && blue.length === 9) {
-          blueOk = true
-        } else if (beginner === 'red' && blue.length === 8) {
-          blueOk = true
-        }
       }
       index = getRandomInt(0, 25)
     }

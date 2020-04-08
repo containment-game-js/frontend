@@ -1,8 +1,8 @@
 import { getRandomInt } from './math'
-const frWords = require('../assets/fr-dictionary.json')
-const enWords = require('../assets/en-dictionary.json')
+import frWords from './fr-dictionary.json'
+import enWords from './en-dictionary.json'
 
-const words = {
+const localesWords = {
   fr: frWords,
   en: enWords,
 }
@@ -17,7 +17,7 @@ const getNextInt = (words, got, int) => {
 }
 
 const selectFinalLocale = locale => {
-  if (Object.keys(words).includes(locale)) {
+  if (Object.keys(localesWords).includes(locale)) {
     return locale
   } else {
     return 'en'
@@ -26,16 +26,14 @@ const selectFinalLocale = locale => {
 
 const random = (howMuch = 1, locale, got = [], foundWords = []) => {
   const finalLocale = selectFinalLocale(locale)
-  const index = getNextInt(words[finalLocale], got)
+  const words = localesWords[finalLocale]
+  const index = getNextInt(words, got)
+  const newRandoms = [...foundWords, words[index]]
   if (howMuch < 2) {
-    return [...foundWords, words[finalLocale][index]]
+    return newRandoms
   } else {
-    return random(
-      howMuch - 1,
-      finalLocale,
-      [...got, index],
-      [...foundWords, words[finalLocale][index]]
-    )
+    const newGot = [...got, index]
+    return random(howMuch - 1, finalLocale, newGot, newRandoms)
   }
 }
 

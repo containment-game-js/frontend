@@ -4,7 +4,7 @@ import router from '@/router'
 import { socket } from '@/services/socket.io'
 import { connectionURL } from '@/services/backend'
 import * as storage from '@/services/storage'
-import { CodeNamesEngine } from '@/engine/CodeNamesEngine'
+import { CodeNamesEngine } from '@/engine/code-names'
 
 Vue.use(Vuex)
 
