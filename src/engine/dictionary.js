@@ -28,7 +28,7 @@ const random = (howMuch = 1, locale, got = [], foundWords = []) => {
   const finalLocale = selectFinalLocale(locale)
   const index = getNextInt(words[finalLocale], got)
   if (howMuch < 2) {
-    return [...foundWords, words[index]]
+    return [...foundWords, words[finalLocale][index]]
   } else {
     return random(
       howMuch - 1,
