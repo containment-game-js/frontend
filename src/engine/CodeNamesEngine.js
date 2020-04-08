@@ -38,8 +38,8 @@ const generateRandomCards = (beginner, murderer) => {
   return { blue, red }
 }
 
-const init = () => {
-  const cards = Dictionnary.random(25)
+const init = locale => {
+  const cards = Dictionnary.random(25, locale)
   const beginner = chooseWhoBegin()
   const murderer = getRandomInt(0, 25)
   const { blue, red } = generateRandomCards(beginner, murderer)
@@ -217,8 +217,8 @@ const talk = (state, player, { hint, numberToGuess }) => {
   return state
 }
 
-const CodeNamesEngine = (players, previousState) => {
-  const state = previousState || init()
+const CodeNamesEngine = (players, locale, previousState) => {
+  const state = previousState || init(locale)
   return Engine({ state, players, filter, actions: { guess, pass, talk } })
 }
 

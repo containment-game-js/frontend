@@ -8,6 +8,8 @@ import { CodeNamesEngine } from '@/engine/CodeNamesEngine'
 
 Vue.use(Vuex)
 
+const [locale] = (navigator.language || navigator.userLanguage).split('-')
+
 const otherColor = color => {
   if (color === 'blue') {
     return 'red'
@@ -135,7 +137,7 @@ const store = new Vuex.Store({
       const { teams, spies, roomInfo } = store.state
       const { players } = roomInfo
       const finalPlayers = generateEnginePlayers({ players, teams, spies })
-      const engine = CodeNamesEngine(finalPlayers)
+      const engine = CodeNamesEngine(finalPlayers, locale)
       const { uid, roomId } = store.state
       store.commit('addEngine', engine)
       localStorage.setItem(`${roomId}-spies`, JSON.stringify(spies))
@@ -214,7 +216,7 @@ const store = new Vuex.Store({
           const teams = JSON.parse(localStorage.getItem(`${roomId}-teams`))
           const spies = JSON.parse(localStorage.getItem(`${roomId}-spies`))
           const { players, state } = JSON.parse(oldEngine)
-          const engine = CodeNamesEngine(players, state)
+          const engine = CodeNamesEngine(players, locale, state)
           store.commit('setTeams', teams)
           store.commit('setSpies', spies)
           store.commit('addEngine', engine)
