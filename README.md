@@ -15,7 +15,7 @@ First things first, install Node.js, yarn and git, and clone the repo.
 git clone git@github.com:containment-game-js/frontend.git containment-game-frontend
 ```
 
-Make sure [the backend is installed and running](https://github.com/containment-game-js/backend), and start the project.
+Make sure [the backend is installed and running](https://github.com/containment-game-js/server), and start the project.
 
 ```bash
 cd containment-game-frontend
