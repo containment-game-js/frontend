@@ -1,7 +1,7 @@
 module.exports = {
   pwa: {
     workboxOptions: {
-      exclude: [/_redirects/, /img\/icons/],
+      exclude: [/_redirects/, /_headers/, /img\/icons/],
     },
   },
 }
