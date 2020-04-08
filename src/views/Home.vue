@@ -57,7 +57,7 @@
     </card>
     <card pad-y>
       <card-header>
-        <row align="center" space>
+        <row justify="between" align="center">
           {{ $tc('home.title.publicRooms', rooms.length) }}
           <refresh-ccw-icon
             size="1x"
@@ -79,7 +79,7 @@
           >
             <card contrast>
               <card-header class="room-card-title">
-                <row space align="center">
+                <row justify="between" align="center">
                   {{ room.name }}
                   <span class="private-indicator" v-if="room.privateRoom">
                     {{ $t('home.title.private') }}
@@ -139,7 +139,6 @@ export default {
   data() {
     return {
       inputRoomId: '',
-      modal: false,
       privateRoom: false,
       updatingRooms: false,
       lastTime: Date.now(),
@@ -160,9 +159,6 @@ export default {
       if (this.canJoin) {
         this.$router.push(`/preparation/${room.id}`)
       }
-    },
-    join() {
-      this.modal = true
     },
   },
   computed: {

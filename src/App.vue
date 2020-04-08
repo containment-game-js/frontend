@@ -161,4 +161,14 @@ h6 {
 .grow {
   flex: 1;
 }
+
+.visible-s {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .visible-s {
+    display: block;
+  }
+}
 </style>

@@ -1,9 +1,9 @@
 <template lang="html">
   <layout full class="code-names-colors">
+    <template v-slot:game>
+      Code Names
+    </template>
     <template v-slot:navbar>
-      <div class="code-inline mar-x">
-        Code Names
-      </div>
       <div class="mar-x">
         {{ $t('game.navbar.turn') }}
         <span
@@ -502,6 +502,12 @@ label {
   height: 100%;
 }
 
+@media (max-width: 900px) {
+  .board {
+    grid-gap: 10px;
+  }
+}
+
 .card {
   border-radius: 5px;
   display: flex;
@@ -513,6 +519,13 @@ label {
   color: #112d4e;
   font-size: 1.1rem;
   font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .card {
+    font-size: 0.9rem;
+    padding: 5px;
+  }
 }
 
 .icon {
