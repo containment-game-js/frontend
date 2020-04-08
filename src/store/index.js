@@ -4,19 +4,11 @@ import router from '@/router'
 import { socket } from '@/services/socket.io'
 import { connectionURL } from '@/services/backend'
 import * as storage from '@/services/storage'
-import { CodeNamesEngine } from '@/engine/code-names'
+import { CodeNamesEngine, otherColor } from '@/engine/code-names'
 
 Vue.use(Vuex)
 
 const [locale] = (navigator.language || navigator.userLanguage).split('-')
-
-const otherColor = color => {
-  if (color === 'blue') {
-    return 'red'
-  } else {
-    return 'blue'
-  }
-}
 
 const getRoomInfo = async rid => {
   const response = await fetch(`${connectionURL()}/get-room-info/${rid}`)

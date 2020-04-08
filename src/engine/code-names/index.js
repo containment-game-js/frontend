@@ -233,4 +233,4 @@ const CodeNamesEngine = (players, locale, previousState) => {
 }
 
 export default CodeNamesEngine
-export { CodeNamesEngine, BLUE, RED, TEAM_COLORS }
+export { CodeNamesEngine, otherColor, BLUE, RED, TEAM_COLORS }
