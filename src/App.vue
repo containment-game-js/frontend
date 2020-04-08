@@ -187,4 +187,8 @@ h6 {
 .pulse {
   animation: pulse 2s infinite running;
 }
+
+.capitalize {
+  text-transform: capitalize;
+}
 </style>

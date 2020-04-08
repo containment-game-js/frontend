@@ -4,7 +4,7 @@ import * as storage from '@/services/storage'
 import Home from '@/views/Home.vue'
 import Game from '@/views/Game.vue'
 import Preparation from '@/views/Preparation.vue'
-import EnterUsername from '@/views/EnterUsername.vue'
+import EnterUsername from '@/views/Username/Enter.vue'
 
 Vue.use(VueRouter)
 

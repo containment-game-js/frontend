@@ -16,9 +16,7 @@
       </div>
       <div class="mar-x">
         {{ $tc('game.navbar.spyOrPlayer', 2) }}
-        <font-awesome-icon
-          :icon="viewState.spyToTalk ? 'user-secret' : 'user'"
-        />
+        <font-awesome-icon :icon="isSpyIcon(viewState.spyToTalk)" />
         {{
           viewState.spyToTalk
             ? $t('game.navbar.spy')
@@ -27,11 +25,7 @@
       </div>
       <div class="mar-x">
         {{ $t('game.navbar.team') }}
-        <span
-          class="highlight"
-          style="text-transform: capitalize;"
-          :class="team"
-        >
+        <span class="highlight capitalize" :class="team">
           {{ $t(team) }}
         </span>
       </div>
@@ -50,10 +44,7 @@
             <div class="player-name" v-for="p in redPlayers" :key="p.id">
               <row justify="between" align="center">
                 {{ p.name }}
-                <font-awesome-icon
-                  style="color: #555;"
-                  :icon="p.spy ? 'user-secret' : 'user'"
-                />
+                <font-awesome-icon :icon="isSpyIcon(p.spy)" />
               </row>
             </div>
           </div>
@@ -61,10 +52,7 @@
             <div class="player-name" v-for="p in bluePlayers" :key="p.id">
               <row justify="between" align="center">
                 {{ p.name }}
-                <font-awesome-icon
-                  style="color: #555;"
-                  :icon="p.spy ? 'user-secret' : 'user'"
-                />
+                <font-awesome-icon :icon="isSpyIcon(p.spy)" />
               </row>
             </div>
           </div>
@@ -148,11 +136,11 @@
       </div>
     </template>
     <div class="board">
-      <transition name="overlay">
-        <div class="overlay" v-if="overlayContent">
-          <div class="overlay-text" v-if="overlayContent !== 'finish'">
-            {{ overlayContent }}
-          </div>
+      <overlay :show="!!overlayContent">
+        <div class="overlay-text" v-if="overlayContent !== 'finish'">
+          {{ overlayContent }}
+        </div>
+        <template v-else>
           <div v-if="winner !== null">
             <h1 class="xl-pad win-lose-title" v-if="winner === team">
               {{ $t('game.main.win') }}
@@ -173,8 +161,8 @@
               {{ $t('game.main.waitHost') }}
             </row>
           </div>
-        </div>
-      </transition>
+        </template>
+      </overlay>
       <div
         v-for="(card, index) in (viewState || {}).cards"
         :class="`card ${correctCardColor(index)} ${canClick(index)}`"
@@ -189,6 +177,7 @@
 
 <script>
 import Layout from '@/components/Layout.vue'
+import Overlay from '@/components/Overlay.vue'
 import Button from '@/components/Button.vue'
 import Row from '@/components/Row.vue'
 import { socket } from '@/services/socket.io'
@@ -206,6 +195,7 @@ export default {
     CustomButton: Button,
     Layout,
     Row,
+    Overlay,
   },
   props: {
     rid: String,
@@ -228,6 +218,9 @@ export default {
     }
   },
   methods: {
+    isSpyIcon(value) {
+      return value ? 'user-secret' : 'user'
+    },
     permuteOverlay(content, delay = 0) {
       if (this.timeout) {
         clearTimeout(this.previousTimeout)
@@ -604,6 +597,7 @@ label {
   margin-bottom: 6px;
   text-overflow: ellipsis;
   overflow: hidden;
+  color: var(--ternary);
 }
 
 .sidebar {
@@ -628,37 +622,6 @@ label {
 .help {
   background: var(--primary);
   border-radius: 5px;
-}
-
-.overlay {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--background);
-  z-index: 10;
-  transition: all 0.2s;
-}
-
-.overlay-enter,
-.overlay-leave-to {
-  opacity: 0;
-}
-
-.overlay-fade-in {
-  opacity: 1;
-}
-
-.overlay-enter-active,
-.overlay-leave-active {
-  transition: opacity 0.5s;
-}
-
-.overlay-enter,
-.overlay-leave-to {
-  opacity: 0;
 }
 
 .overlay-text {
