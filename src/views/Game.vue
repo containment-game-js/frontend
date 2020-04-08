@@ -209,11 +209,6 @@ export default {
   beforeMount: async function () {},
   mounted: async function () {
     await this.$store.dispatch('joinRoom', this.rid)
-    const { NODE_ENV, VUE_APP_MOCK_GAME } = process.env
-    const { isHost } = this.$store.state
-    if (isHost && NODE_ENV === 'development' && VUE_APP_MOCK_GAME) {
-      this.$store.dispatch('launchGameMock')
-    }
     this.permuteOverlay(this.$t('game.main.initialization'))
   },
   beforeDestroy() {

@@ -217,8 +217,8 @@ const talk = (state, player, { hint, numberToGuess }) => {
   return state
 }
 
-const CodeNamesEngine = players => {
-  const state = init()
+const CodeNamesEngine = (players, previousState) => {
+  const state = previousState || init()
   return Engine({ state, players, filter, actions: { guess, pass, talk } })
 }
 
