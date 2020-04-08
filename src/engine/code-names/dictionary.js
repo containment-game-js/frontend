@@ -1,11 +1,5 @@
 import { getRandomInt } from './math'
-import frWords from './fr-dictionary.json'
-import enWords from './en-dictionary.json'
-
-const localesWords = {
-  fr: frWords,
-  en: enWords,
-}
+import * as localesWords from './dictionaries'
 
 const getNextInt = (words, got, int) => {
   const index = int || getRandomInt(0, words.length)
