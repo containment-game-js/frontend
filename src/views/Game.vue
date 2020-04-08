@@ -90,6 +90,7 @@
             <input
               type="text"
               class="s-pad xs-mar-top input"
+              :class="{ pulse: canPlay && hint === '' }"
               v-model.trim="hint"
               @keydown.space.prevent
               :disabled="!canPlay"
@@ -100,6 +101,7 @@
             <input
               type="number"
               class="s-pad xs-mar-top input"
+              :class="{ pulse: canPlay && hint === '' }"
               v-model.number="numberToGuess"
               min="1"
               :disabled="!canPlay"
@@ -112,6 +114,7 @@
               !canPlay ||
               (numberToGuess === 0 || hint === '' || numberToGuess === '')
             "
+            :pulse="canPlay && (numberToGuess > 0 && hint !== '')"
           >
             {{ $t('game.sidebar.sendHint') }}
           </custom-button>
@@ -121,6 +124,7 @@
             :disabled="!canPlay || !viewState.canPass"
             @click="pass"
             class="mar-y"
+            :pulse="canPlay && viewState.canPass"
           >
             {{ $t('game.sidebar.pass') }}
           </custom-button>
