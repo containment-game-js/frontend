@@ -48,7 +48,7 @@
           <h3>{{ $t('game.sidebar.teams') }}</h3>
           <div class="red pad mar-y border-radius">
             <div class="player-name" v-for="p in redPlayers" :key="p.id">
-              <row space align="center">
+              <row justify="between" align="center">
                 {{ p.name }}
                 <font-awesome-icon
                   style="color: #555;"
@@ -59,7 +59,7 @@
           </div>
           <div class="blue pad mar-y border-radius">
             <div class="player-name" v-for="p in bluePlayers" :key="p.id">
-              <row space align="center">
+              <row justify="between" align="center">
                 {{ p.name }}
                 <font-awesome-icon
                   style="color: #555;"
@@ -165,7 +165,7 @@
                 {{ $t('game.main.backTeamSelection') }}
               </custom-button>
             </row>
-            <row v-else>
+            <row justify="center" v-else>
               {{ $t('game.main.waitHost') }}
             </row>
           </div>
@@ -209,11 +209,6 @@ export default {
   beforeMount: async function () {},
   mounted: async function () {
     await this.$store.dispatch('joinRoom', this.rid)
-    const { NODE_ENV, VUE_APP_MOCK_GAME } = process.env
-    const { isHost } = this.$store.state
-    if (isHost && NODE_ENV === 'development' && VUE_APP_MOCK_GAME) {
-      this.$store.dispatch('launchGameMock')
-    }
     this.permuteOverlay(this.$t('game.main.initialization'))
   },
   beforeDestroy() {

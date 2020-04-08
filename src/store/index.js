@@ -8,6 +8,8 @@ import { CodeNamesEngine } from '@/engine/CodeNamesEngine'
 
 Vue.use(Vuex)
 
+const [locale] = (navigator.language || navigator.userLanguage).split('-')
+
 const otherColor = color => {
   if (color === 'blue') {
     return 'red'
@@ -32,6 +34,12 @@ const generateEnginePlayers = ({ players, teams, spies }) => {
     const spy = spies[team] === player.id
     return { ...player, team, spy }
   })
+}
+
+const stopRefresh = event => {
+  event.preventDefault()
+  event.returnValue = ''
+  return ''
 }
 
 const store = new Vuex.Store({
@@ -125,28 +133,16 @@ const store = new Vuex.Store({
       const rooms = await response.json()
       store.commit('addRooms', rooms)
     },
-    launchGameMock(store) {
-      const { players } = store.state.roomInfo
-      const playersId = players.map(p => p.id)
-      const teams = {
-        red: playersId.slice(0, 2),
-        blue: playersId.slice(2),
-      }
-      const spies = {
-        red: teams.red[0],
-        blue: teams.blue[0],
-      }
-      store.commit('setTeams', teams)
-      store.commit('setSpies', spies)
-      store.dispatch('launchGame')
-    },
     launchGame(store) {
       const { teams, spies, roomInfo } = store.state
       const { players } = roomInfo
       const finalPlayers = generateEnginePlayers({ players, teams, spies })
-      const engine = CodeNamesEngine(finalPlayers)
+      const engine = CodeNamesEngine(finalPlayers, locale)
       const { uid, roomId } = store.state
       store.commit('addEngine', engine)
+      localStorage.setItem(`${roomId}-spies`, JSON.stringify(spies))
+      localStorage.setItem(`${roomId}-teams`, JSON.stringify(teams))
+      localStorage.setItem(roomId, engine.dump())
       if (router.currentRoute.name === 'Preparation') {
         socket.emit('state', { id: uid, rid: roomId, state: 'start' })
         router.push(`/game/${store.state.roomId}`)
@@ -212,6 +208,21 @@ const store = new Vuex.Store({
         socket.on('action', action => store.dispatch('runAction', action))
       }
     },
+    restoreOldState(store) {
+      const { engine, roomId } = store.state
+      if (engine === null) {
+        const oldEngine = localStorage.getItem(roomId)
+        if (oldEngine) {
+          const teams = JSON.parse(localStorage.getItem(`${roomId}-teams`))
+          const spies = JSON.parse(localStorage.getItem(`${roomId}-spies`))
+          const { players, state } = JSON.parse(oldEngine)
+          const engine = CodeNamesEngine(players, locale, state)
+          store.commit('setTeams', teams)
+          store.commit('setSpies', spies)
+          store.commit('addEngine', engine)
+        }
+      }
+    },
     async joinRoom(store, rid) {
       const { name, uid, roomId } = store.state
       if (rid !== roomId) {
@@ -221,6 +232,10 @@ const store = new Vuex.Store({
       if (roomInfo) {
         store.commit('addRoomInfo', roomInfo)
         store.commit('setRoomId', rid)
+        if (store.state.isHost) {
+          window.addEventListener('beforeunload', stopRefresh)
+          store.dispatch('restoreOldState')
+        }
         store.dispatch('listenForWebsocket')
         socket.emit('enter-room', { rid, id: uid, name })
         socket.on('kicked', () => {
@@ -231,11 +246,18 @@ const store = new Vuex.Store({
         router.push('/')
       }
     },
+    clearLocalStorage(store) {
+      const { roomId } = store.state
+      localStorage.removeItem(roomId)
+      localStorage.removeItem(`${roomId}-teams`)
+      localStorage.removeItem(`${roomId}-spies`)
+    },
     closeRoom(store) {
       const { uid, roomId } = store.state
       socket.emit('close-room', { id: uid, rid: roomId })
     },
     endSocket() {
+      window.removeEventListener('beforeunload', stopRefresh)
       socket.off('kicked')
       socket.off('users')
       socket.off('state')
@@ -261,6 +283,11 @@ const store = new Vuex.Store({
     runAction(store, { action, id }) {
       const { type, params } = action
       store.state.engine.run(type, id, params)
+      if (store.state.engine.state.winner === null) {
+        localStorage.setItem(store.state.roomId, store.state.engine.dump())
+      } else {
+        store.dispatch('clearLocalStorage')
+      }
       store.dispatch('dispatchState')
     },
     dispatchState(store) {

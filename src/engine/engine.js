@@ -14,6 +14,11 @@ class Engine_ {
     }
   }
 
+  dump() {
+    const { state, players } = this
+    return JSON.stringify({ state, players })
+  }
+
   run(action, pid, params) {
     const { players, state, actions } = this
     const player = players.find(({ id }) => id === pid)
