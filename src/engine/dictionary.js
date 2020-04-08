@@ -1,21 +1,32 @@
 import { getRandomInt } from './math'
-const words = require('../assets/dictionary.json')
+const frWords = require('../assets/fr-dictionary.json')
+const enWords = require('../assets/en-dictionary.json')
 
-const getNextInt = (got, int) => {
+const words = {
+  fr: frWords,
+  en: enWords,
+}
+
+const getNextInt = (words, got, int) => {
   const index = int || getRandomInt(0, words.length)
   if (got.includes(index)) {
-    return getNextInt(got, (index + 1) % words.length)
+    return getNextInt(words, got, (index + 1) % words.length)
   } else {
     return index
   }
 }
 
-const random = (howMuch = 1, got = [], foundWords = []) => {
-  const index = getNextInt(got)
+const random = (howMuch = 1, locale = 'fr', got = [], foundWords = []) => {
+  const index = getNextInt(words[locale], got)
   if (howMuch < 2) {
     return [...foundWords, words[index]]
   } else {
-    return random(howMuch - 1, [...got, index], [...foundWords, words[index]])
+    return random(
+      howMuch - 1,
+      locale,
+      [...got, index],
+      [...foundWords, words[index]]
+    )
   }
 }
 
