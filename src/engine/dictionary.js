@@ -25,7 +25,7 @@ const random = (howMuch = 1, locale = 'fr', got = [], foundWords = []) => {
       howMuch - 1,
       locale,
       [...got, index],
-      [...foundWords, words[index]]
+      [...foundWords, words[locale][index]]
     )
   }
 }
