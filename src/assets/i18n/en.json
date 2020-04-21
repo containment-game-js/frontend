@@ -29,6 +29,12 @@
   "preparation": {
     "launch": "Launch the game!",
     "launchNow": "Launch now !",
+    "locale": {
+      "label": "Language",
+      "english": "English",
+      "french": "French",
+      "none": "No default"
+    },
     "title": {
       "welcome": "Welcome to room",
       "players": "Players",

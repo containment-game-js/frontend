@@ -26,6 +26,14 @@
         </custom-button>
       </template>
     </grid>
+    <grid pad-y templateColumns="auto 1fr" border>
+      <div>{{ $t('preparation.locale.label') }}</div>
+      <select v-model="locale" class="locale-input">
+        <option value="en">{{ $t('preparation.locale.english') }}</option>
+        <option value="fr">{{ $t('preparation.locale.french') }}</option>
+        <option value="none">{{ $t('preparation.locale.none') }}</option>
+      </select>
+    </grid>
     <card pad-y>
       <card-header>{{ $t('preparation.title.players') }}</card-header>
       <card-content>
@@ -171,6 +179,10 @@ export default {
   props: {
     rid: String,
   },
+  data() {
+    const [locale] = (navigator.language || navigator.userLanguage).split('-')
+    return { customWords: '', locale }
+  },
   mounted() {
     this.$store.dispatch('endSocket')
     this.$store.dispatch('joinRoom', this.rid)
@@ -192,7 +204,7 @@ export default {
       this.$store.dispatch('updateOwnTeam', action)
     },
     launchGame() {
-      this.$store.dispatch('launchGame')
+      this.$store.dispatch('launchGame', this.locale)
     },
   },
   computed: {
@@ -355,5 +367,12 @@ export default {
   cursor: not-allowed;
   pointer-events: none;
   opacity: 0.6;
+}
+
+.locale-input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: var(--ternary);
 }
 </style>

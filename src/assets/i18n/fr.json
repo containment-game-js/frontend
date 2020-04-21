@@ -29,6 +29,12 @@
   "preparation": {
     "launch": "Lancez la partie !",
     "launchNow": "Commencer maintenant !",
+    "locale": {
+      "label": "Langue",
+      "english": "Anglais",
+      "french": "Français",
+      "none": "Pas de défaut"
+    },
     "title": {
       "welcome": "Bienvenue dans la salle",
       "players": "Joueurs",
