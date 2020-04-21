@@ -26,7 +26,7 @@
         </custom-button>
       </template>
     </grid>
-    <grid pad-y templateColumns="auto 1fr" border>
+    <grid pad-y templateColumns="auto 1fr" border v-if="isHost">
       <div>{{ $t('preparation.customWords.label') }}</div>
       <textarea
         rows="15"
