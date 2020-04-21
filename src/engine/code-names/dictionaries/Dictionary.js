@@ -30,7 +30,7 @@ class Dictionary {
   }
 
   removeFromActualWords(index) {
-    this.actualWords.splice(index, 0)
+    this.actualWords.splice(index, 1)
     if (this.actualWords.length === 0) {
       this.actualWords = [...this.words]
     }
