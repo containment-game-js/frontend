@@ -1,14 +1,4 @@
-import { getRandomInt } from './math'
 import * as localesWords from './dictionaries'
-
-const getNextInt = (words, got, int) => {
-  const index = int || getRandomInt(0, words.length)
-  if (got.includes(index)) {
-    return getNextInt(words, got, (index + 1) % words.length)
-  } else {
-    return index
-  }
-}
 
 const selectFinalLocale = locale => {
   if (Object.keys(localesWords).includes(locale)) {
@@ -18,17 +8,10 @@ const selectFinalLocale = locale => {
   }
 }
 
-const random = (howMuch = 1, locale, got = [], foundWords = []) => {
+const random = (howMuch = 1, locale) => {
   const finalLocale = selectFinalLocale(locale)
   const words = localesWords[finalLocale]
-  const index = getNextInt(words, got)
-  const newRandoms = [...foundWords, words[index]]
-  if (howMuch < 2) {
-    return newRandoms
-  } else {
-    const newGot = [...got, index]
-    return random(howMuch - 1, finalLocale, newGot, newRandoms)
-  }
+  return words.random(howMuch)
 }
 
 export { random }
