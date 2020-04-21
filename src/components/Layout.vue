@@ -2,7 +2,7 @@
   <div class="layout" :class="{ full }">
     <nav class="navbar pad">
       <h1>Containment Game</h1>
-      <div class="code-inline mar-x">
+      <div class="code-inline mar-x" v-if="$slots.game">
         <slot name="game" />
       </div>
       <div class="visible-s break mar" />

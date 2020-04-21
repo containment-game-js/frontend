@@ -229,7 +229,13 @@ const talk = (state, player, { hint, numberToGuess }) => {
 
 const CodeNamesEngine = (players, locale, previousState) => {
   const state = previousState || init(locale)
-  return Engine({ state, players, filter, actions: { guess, pass, talk } })
+  return Engine({
+    state,
+    players,
+    filter,
+    locale,
+    actions: { guess, pass, talk },
+  })
 }
 
 export default CodeNamesEngine

@@ -29,6 +29,16 @@
   "preparation": {
     "launch": "Lancez la partie !",
     "launchNow": "Commencer maintenant !",
+    "customWords": {
+      "label": "Mots personnalisés",
+      "placeholder": "Entrez vos mots personnalisés ici, séparés par un espace, une virgule ou un saut de ligne.\n\nFaites attention, si vous ne sélectionnez pas de dictionnaire, vous devez rentrer au moins 25 mots !"
+    },
+    "locale": {
+      "label": "Langue",
+      "english": "Anglais",
+      "french": "Français",
+      "none": "Pas de défaut"
+    },
     "title": {
       "welcome": "Bienvenue dans la salle",
       "players": "Joueurs",

@@ -26,6 +26,21 @@
         </custom-button>
       </template>
     </grid>
+    <grid pad-y templateColumns="auto 1fr" border>
+      <div>{{ $t('preparation.customWords.label') }}</div>
+      <textarea
+        rows="15"
+        class="customwords-input"
+        :placeholder="$t('preparation.customWords.placeholder')"
+        v-model="customWords"
+      />
+      <div>{{ $t('preparation.locale.label') }}</div>
+      <select v-model="locale" class="locale-input">
+        <option value="en">{{ $t('preparation.locale.english') }}</option>
+        <option value="fr">{{ $t('preparation.locale.french') }}</option>
+        <option value="none">{{ $t('preparation.locale.none') }}</option>
+      </select>
+    </grid>
     <card pad-y>
       <card-header>{{ $t('preparation.title.players') }}</card-header>
       <card-content>
@@ -156,6 +171,9 @@ import CardFooter from '@/components/Card/Footer.vue'
 import Grid from '@/components/Grid.vue'
 import Row from '@/components/Row.vue'
 import Button from '@/components/Button.vue'
+import * as Dicts from '@/engine/code-names/dictionaries'
+
+const toWords = words => words.split(/[^a-zA-ZÀ-ÿ-]/).filter(a => a)
 
 export default {
   components: {
@@ -171,7 +189,21 @@ export default {
   props: {
     rid: String,
   },
+  data() {
+    const [locale] = (navigator.language || navigator.userLanguage).split('-')
+    return { customWords: '', locale }
+  },
+  watch: {
+    customWords(newValue) {
+      localStorage.setItem('custom-words', newValue)
+      Dicts.update(this.locale, toWords(newValue))
+    },
+    locale(newValue) {
+      Dicts.update(newValue, toWords(this.customWords))
+    },
+  },
   mounted() {
+    this.customWords = window.localStorage.getItem('custom-words') || ''
     this.$store.dispatch('endSocket')
     this.$store.dispatch('joinRoom', this.rid)
   },
@@ -192,7 +224,7 @@ export default {
       this.$store.dispatch('updateOwnTeam', action)
     },
     launchGame() {
-      this.$store.dispatch('launchGame')
+      this.$store.dispatch('launchGame', this.locale)
     },
   },
   computed: {
@@ -257,11 +289,16 @@ export default {
       )
     },
     isLaunchable() {
-      const { blue, red } = this.teams
-      if (blue.length + red.length === this.roomInfo.players.length) {
-        return blue.length >= 2 && red.length >= 2
+      this.customWords // There for dependency graph.
+      if (Dicts[this.locale].length < 25) {
+        return false
+      } else {
+        const { blue, red } = this.teams
+        if (blue.length + red.length === this.roomInfo.players.length) {
+          return blue.length >= 2 && red.length >= 2
+        }
+        return false
       }
-      return false
     },
   },
 }
@@ -355,5 +392,21 @@ export default {
   cursor: not-allowed;
   pointer-events: none;
   opacity: 0.6;
+}
+
+.customwords-input {
+  border: none;
+  resize: none;
+  outline: none;
+  font-size: 1rem;
+  color: var(--ternary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.locale-input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: var(--ternary);
 }
 </style>

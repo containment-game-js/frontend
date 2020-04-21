@@ -8,8 +8,6 @@ import { CodeNamesEngine, otherColor } from '@/engine/code-names'
 
 Vue.use(Vuex)
 
-const [locale] = (navigator.language || navigator.userLanguage).split('-')
-
 const getRoomInfo = async rid => {
   const response = await fetch(`${connectionURL()}/get-room-info/${rid}`)
   if (response.status === 200) {
@@ -125,7 +123,7 @@ const store = new Vuex.Store({
       const rooms = await response.json()
       store.commit('addRooms', rooms)
     },
-    launchGame(store) {
+    launchGame(store, locale) {
       const { teams, spies, roomInfo } = store.state
       const { players } = roomInfo
       const finalPlayers = generateEnginePlayers({ players, teams, spies })
@@ -207,7 +205,7 @@ const store = new Vuex.Store({
         if (oldEngine) {
           const teams = JSON.parse(localStorage.getItem(`${roomId}-teams`))
           const spies = JSON.parse(localStorage.getItem(`${roomId}-spies`))
-          const { players, state } = JSON.parse(oldEngine)
+          const { players, state, locale } = JSON.parse(oldEngine)
           const engine = CodeNamesEngine(players, locale, state)
           store.commit('setTeams', teams)
           store.commit('setSpies', spies)
