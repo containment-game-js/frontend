@@ -2,7 +2,28 @@ import Dictionary from './Dictionary'
 import frWords from './fr-dictionary'
 import enWords from './en-dictionary'
 
-const fr = new Dictionary(frWords)
-const en = new Dictionary(enWords)
+let fr = new Dictionary(frWords)
+let en = new Dictionary(enWords)
+let none = new Dictionary([])
 
-export { fr, en }
+const update = (locale, words = []) => {
+  switch (locale) {
+    case 'fr': {
+      fr = new Dictionary(frWords)
+      fr.addWords(words)
+      break
+    }
+    case 'en': {
+      en = new Dictionary(enWords)
+      en.addWords(words)
+      break
+    }
+    case 'none': {
+      none = new Dictionary([])
+      none.addWords(words)
+      break
+    }
+  }
+}
+
+export { fr, en, none, update }
