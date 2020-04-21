@@ -29,6 +29,16 @@
   "preparation": {
     "launch": "Launch the game!",
     "launchNow": "Launch now !",
+    "customWords": {
+      "label": "Custom words",
+      "placeholder": "Type your custom words here separated by a space or newline.\n\nBe careful if you don’t select a dictionnary, you need at least 25 words!"
+    },
+    "locale": {
+      "label": "Language",
+      "english": "English",
+      "french": "French",
+      "none": "No default"
+    },
     "title": {
       "welcome": "Welcome to room",
       "players": "Players",

@@ -4,10 +4,11 @@ const Engine = params => {
 
 class Engine_ {
   constructor(options) {
-    const { players, state, actions, filter } = options
+    const { players, state, actions, filter, locale } = options
     this.players = players
     this.state = state
     this.actions = actions
+    this.locale = locale
     this.getState = function (pid) {
       const player = this.players.find(({ id }) => id === pid)
       return filter(this.state, player, this.players)
@@ -15,8 +16,8 @@ class Engine_ {
   }
 
   dump() {
-    const { state, players } = this
-    return JSON.stringify({ state, players })
+    const { state, players, locale } = this
+    return JSON.stringify({ state, players, locale })
   }
 
   run(action, pid, params) {

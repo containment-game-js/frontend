@@ -1,9 +1,32 @@
 import { getRandomInt } from '../math'
 
+const lower = s => {
+  return s.toLowerCase().trim()
+}
+
 class Dictionary {
   constructor(words) {
-    this.words = [...words]
-    this.actualWords = [...words]
+    const finalWords = words.map(s => s.toLowerCase().trim())
+    this.words = new Set(finalWords)
+    this.actualWords = [...this.words]
+  }
+
+  get length() {
+    return this.words.size
+  }
+
+  addWords(words) {
+    words.map(lower).forEach(t => {
+      this.words.add(t)
+    })
+    this.actualWords = [...this.words]
+  }
+
+  removeWords(words) {
+    words.map(lower).forEach(t => {
+      this.words.delete(t)
+    })
+    this.actualWords = [...this.words]
   }
 
   removeFromActualWords(index) {
