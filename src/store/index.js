@@ -111,7 +111,7 @@ const store = new Vuex.Store({
   },
   actions: {
     newSpies(store) {
-      const { spies, teams } = store
+      const { spies, teams } = store.state
       const blueChoosable = [...teams.blue].filter(user => user !== spies.blue)
       const redChoosable = [...teams.red].filter(user => user !== spies.red)
       const blue = blueChoosable[getRandomInt(0, blueChoosable.length)]
