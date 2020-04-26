@@ -199,7 +199,9 @@ const store = new Vuex.Store({
         if (state === 'back-selection') {
           router.push(`/preparation/${store.state.roomId}`)
         } else {
-          store.commit('updateGameState', state)
+          if (state.cards !== undefined) {
+            store.commit('updateGameState', state)
+          }
         }
       })
       if (store.state.isHost) {
