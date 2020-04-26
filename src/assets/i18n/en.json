@@ -96,7 +96,7 @@
     "main": {
       "win": "You win!",
       "lose": "You lost!",
-      "anotherOne": "Another one?",
+      "anotherOne": "Another one? Spies will be randomized.",
       "backTeamSelection": "Back to team selection",
       "waitHost": "Wait for the host to choose...",
       "yourTurn": "It’s your time to play!",

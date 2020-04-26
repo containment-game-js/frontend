@@ -96,7 +96,7 @@
     "main": {
       "win": "Vous avez gagné !",
       "lose": "Vous avez perdu !",
-      "anotherOne": "Encore une ?",
+      "anotherOne": "Encore une ? Les espions seront tirés au hasard.",
       "backTeamSelection": "Retourner à la sélection des équipes",
       "waitHost": "En attente du choix de l'hôte...",
       "yourTurn": "C’est à votre tour de jouer !",
