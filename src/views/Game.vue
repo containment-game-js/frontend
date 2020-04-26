@@ -31,7 +31,7 @@
       </div>
     </template>
     <template v-slot:sidebar>
-      <div class="pad sidebar">
+      <div class="pad game-sidebar">
         <div class="pad-y">
           {{ $t('game.sidebar.play') }}
           <div class="highlight" :class="{ green: canPlay, grey: !canPlay }">
@@ -601,7 +601,7 @@ label {
   color: var(--ternary);
 }
 
-.sidebar {
+.game-sidebar {
   border-right: 1px solid var(--primary);
   height: 100%;
   width: 250px;
