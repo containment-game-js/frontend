@@ -17,16 +17,20 @@ class Dictionary {
 
   addWords(words) {
     words.map(lower).forEach(t => {
-      this.words.add(t)
+      if (!this.words.has(t)) {
+        this.words.add(t)
+        this.actualWords.push(t)
+      }
     })
-    this.actualWords = [...this.words]
   }
 
   removeWords(words) {
     words.map(lower).forEach(t => {
-      this.words.delete(t)
+      if (this.words.has(t)) {
+        this.words.delete(t)
+        this.actualWords = this.actualWords.filter(s => s !== t)
+      }
     })
-    this.actualWords = [...this.words]
   }
 
   removeFromActualWords(index) {
