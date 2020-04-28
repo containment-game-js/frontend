@@ -10,6 +10,7 @@
   --secondary: #3f72af;
   --primary: #dbe2ef;
   --background: #f9f7f7;
+  --background-rgb: 249, 246, 246;
   --secondary-rgb: 63, 114, 175;
 }
 
@@ -19,6 +20,7 @@
     --secondary: #3282b8;
     --primary: #0f4c75;
     --background: #1b262c;
+    --background-rgb: 27, 39, 45;
     --secondary-rgb: 50, 130, 184;
   }
 }
