@@ -292,6 +292,9 @@ export default {
       const found = this.isCardFound(index)
       if (found) {
         return found
+      } else if (this.winner !== null) {
+        const color = this.spyCorrectCardColor(index)
+        return `${color} hidden`
       } else if (this.isSpy) {
         return this.spyCorrectCardColor(index)
       } else {
