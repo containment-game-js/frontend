@@ -136,7 +136,10 @@
       </div>
     </template>
     <div class="board">
-      <overlay :show="!!overlayContent">
+      <overlay
+        :show="!!overlayContent"
+        :transparent="overlayContent === 'finish'"
+      >
         <div class="overlay-text" v-if="overlayContent !== 'finish'">
           {{ overlayContent }}
         </div>
@@ -149,11 +152,14 @@
               {{ $t('game.main.lose') }}
             </h1>
             <row v-if="isHost">
-              <custom-button class="grow" @click="anotherGame">
+              <custom-button class="grow win-shadow" @click="anotherGame">
                 {{ $t('game.main.anotherOne') }}
               </custom-button>
               <div class="pad"></div>
-              <custom-button class="grow" @click="backToTeamSelection">
+              <custom-button
+                class="grow win-shadow"
+                @click="backToTeamSelection"
+              >
                 {{ $t('game.main.backTeamSelection') }}
               </custom-button>
             </row>
@@ -623,6 +629,10 @@ label {
 
 .win-lose-title {
   text-align: center;
+}
+
+.win-shadow {
+  box-shadow: 0 0 5px 0px #bfbfbf;
 }
 
 .help {
