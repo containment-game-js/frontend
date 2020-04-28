@@ -232,7 +232,9 @@ export default {
           this.previousTimeout = null
           this.overlayContent = content
           this.timeout = setTimeout(() => {
-            this.overlayContent = null
+            if (this.overlayContent !== 'finish') {
+              this.overlayContent = null
+            }
             this.timeout = null
           }, 2000)
         }, delay)
