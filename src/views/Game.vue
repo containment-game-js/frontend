@@ -252,7 +252,7 @@ export default {
     anotherGame: async function () {
       this.overlayContent = null
       await this.$store.dispatch('newSpies')
-      await this.$store.dispatch('launchGame')
+      await this.$store.dispatch('launchGame', this.engine.locale)
       await this.$store.dispatch('dispatchState')
     },
     backToTeamSelection() {
