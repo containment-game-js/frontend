@@ -72,9 +72,11 @@ const filter = (state, player, players) => {
     return { ...state, players }
   } else {
     const newState = { ...state, players }
-    delete newState.blue
-    delete newState.red
-    delete newState.murderer
+    if (newState.winner === null) {
+      delete newState.blue
+      delete newState.red
+      delete newState.murderer
+    }
     return newState
   }
 }
