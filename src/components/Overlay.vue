@@ -1,6 +1,6 @@
 <template lang="html">
   <transition name="overlay">
-    <div class="overlay" v-if="show">
+    <div class="overlay" :class="{ transparent }" v-if="show">
       <slot />
     </div>
   </transition>
@@ -10,6 +10,7 @@
 export default {
   props: {
     show: Boolean,
+    transparent: Boolean,
   },
 }
 </script>
@@ -25,6 +26,10 @@ export default {
   background: var(--background);
   z-index: 10;
   transition: all 0.2s;
+}
+
+.transparent {
+  background: rgba(var(--background-rgb), 0.6);
 }
 
 .overlay-enter,
