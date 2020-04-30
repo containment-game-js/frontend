@@ -5,6 +5,7 @@ import { socket } from '@/services/socket.io'
 import { connectionURL } from '@/services/backend'
 import * as storage from '@/services/storage'
 import { CodeNamesEngine, otherColor } from '@/engine/code-names'
+import { getRandomInt } from '@/engine/code-names/math'
 
 Vue.use(Vuex)
 
@@ -109,6 +110,14 @@ const store = new Vuex.Store({
     },
   },
   actions: {
+    newSpies(store) {
+      const { spies, teams } = store.state
+      const blueChoosable = [...teams.blue].filter(user => user !== spies.blue)
+      const redChoosable = [...teams.red].filter(user => user !== spies.red)
+      const blue = blueChoosable[getRandomInt(0, blueChoosable.length)]
+      const red = redChoosable[getRandomInt(0, redChoosable.length)]
+      store.commit('setSpies', { blue, red })
+    },
     backToTeamSelection(store) {
       const { uid, roomId } = store.state
       socket.emit('state', { id: uid, rid: roomId, state: 'back-selection' })
@@ -190,7 +199,9 @@ const store = new Vuex.Store({
         if (state === 'back-selection') {
           router.push(`/preparation/${store.state.roomId}`)
         } else {
-          store.commit('updateGameState', state)
+          if (state.cards !== undefined) {
+            store.commit('updateGameState', state)
+          }
         }
       })
       if (store.state.isHost) {

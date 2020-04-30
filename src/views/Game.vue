@@ -31,7 +31,7 @@
       </div>
     </template>
     <template v-slot:sidebar>
-      <div class="pad sidebar">
+      <div class="pad game-sidebar">
         <div class="pad-y">
           {{ $t('game.sidebar.play') }}
           <div class="highlight" :class="{ green: canPlay, grey: !canPlay }">
@@ -136,7 +136,10 @@
       </div>
     </template>
     <div class="board">
-      <overlay :show="!!overlayContent">
+      <overlay
+        :show="!!overlayContent"
+        :transparent="overlayContent === 'finish'"
+      >
         <div class="overlay-text" v-if="overlayContent !== 'finish'">
           {{ overlayContent }}
         </div>
@@ -149,11 +152,14 @@
               {{ $t('game.main.lose') }}
             </h1>
             <row v-if="isHost">
-              <custom-button class="grow" @click="anotherGame">
+              <custom-button class="grow win-shadow" @click="anotherGame">
                 {{ $t('game.main.anotherOne') }}
               </custom-button>
               <div class="pad"></div>
-              <custom-button class="grow" @click="backToTeamSelection">
+              <custom-button
+                class="grow win-shadow"
+                @click="backToTeamSelection"
+              >
                 {{ $t('game.main.backTeamSelection') }}
               </custom-button>
             </row>
@@ -232,7 +238,9 @@ export default {
           this.previousTimeout = null
           this.overlayContent = content
           this.timeout = setTimeout(() => {
-            this.overlayContent = null
+            if (this.overlayContent !== 'finish') {
+              this.overlayContent = null
+            }
             this.timeout = null
           }, 2000)
         }, delay)
@@ -251,7 +259,8 @@ export default {
     },
     anotherGame: async function () {
       this.overlayContent = null
-      await this.$store.dispatch('launchGame')
+      await this.$store.dispatch('newSpies')
+      await this.$store.dispatch('launchGame', this.engine.locale)
       await this.$store.dispatch('dispatchState')
     },
     backToTeamSelection() {
@@ -289,6 +298,9 @@ export default {
       const found = this.isCardFound(index)
       if (found) {
         return found
+      } else if (this.winner !== null) {
+        const color = this.spyCorrectCardColor(index)
+        return `${color} hidden`
       } else if (this.isSpy) {
         return this.spyCorrectCardColor(index)
       } else {
@@ -600,7 +612,7 @@ label {
   color: var(--ternary);
 }
 
-.sidebar {
+.game-sidebar {
   border-right: 1px solid var(--primary);
   height: 100%;
   width: 250px;
@@ -617,6 +629,10 @@ label {
 
 .win-lose-title {
   text-align: center;
+}
+
+.win-shadow {
+  box-shadow: 0 0 5px 0px #bfbfbf;
 }
 
 .help {

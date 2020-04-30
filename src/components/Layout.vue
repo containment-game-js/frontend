@@ -71,6 +71,6 @@ export default {
 }
 
 .sidebar {
-  overflow: scroll;
+  overflow: auto;
 }
 </style>
