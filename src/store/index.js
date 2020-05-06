@@ -20,9 +20,9 @@ const getRoomInfo = async rid => {
 
 const generateEnginePlayers = ({ players, teams, spies }) => {
   return players.map(player => {
-    const isBlue = teams.blue.includes(player.id)
+    const isBlue = teams.blue.includes(player.uid)
     const team = isBlue ? 'blue' : 'red'
-    const spy = spies[team] === player.id
+    const spy = spies[team] === player.uid
     return { ...player, team, spy }
   })
 }
@@ -296,10 +296,9 @@ const store = new Vuex.Store({
       if (engine) {
         const { players } = engine
         players.forEach(player => {
-          const { id } = player
-          const state = store.state.engine.getState(id)
+          const state = store.state.engine.getState(player.uid)
           const { uid, roomId } = store.state
-          socket.emit('state', { id: uid, rid: roomId, to: id, state })
+          socket.emit('state', { id: uid, rid: roomId, to: player.uid, state })
         })
       }
     },

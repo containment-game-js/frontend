@@ -206,7 +206,6 @@ export default {
   props: {
     rid: String,
   },
-  beforeMount: async function () {},
   mounted: async function () {
     await this.$store.dispatch('joinRoom', this.rid)
     this.permuteOverlay(this.$t('game.main.initialization'))
@@ -365,7 +364,7 @@ export default {
     },
     team() {
       const { uid } = this.$store.state
-      const player = this.viewState.players.find(({ id }) => id === uid)
+      const player = this.viewState.players.find(player => player.uid === uid)
       if (player) {
         return player.team
       } else {
