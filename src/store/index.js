@@ -88,6 +88,12 @@ const store = new Vuex.Store({
     },
     updateRoomInfoPlayers(state, users) {
       state.roomInfo.players = users
+      state.teams.red = state.teams.red.filter(player =>
+        users.find(user => user.id === player || user.uid === player)
+      )
+      state.teams.blue = state.teams.blue.filter(player =>
+        users.find(user => user.id === player || user.uid === player)
+      )
     },
     updateRoomTeams(state, { id, action }) {
       const otherTeam = otherColor(action)
