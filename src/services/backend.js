@@ -10,7 +10,7 @@ const socketURL = () => {
   if (process.env.NODE_ENV === 'development') {
     return 'http://localhost:3030'
   } else {
-    return 'https://socket.containment-ga.me'
+    return 'https://api.containment-ga.me'
   }
 }
 
