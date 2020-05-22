@@ -10,7 +10,7 @@ class Engine_ {
     this.actions = actions
     this.locale = locale
     this.getState = function (pid) {
-      const player = this.players.find(({ id }) => id === pid)
+      const player = this.players.find(({ uid }) => uid === pid)
       return filter(this.state, player, this.players)
     }
   }
@@ -22,7 +22,7 @@ class Engine_ {
 
   run(action, pid, params) {
     const { players, state, actions } = this
-    const player = players.find(({ id }) => id === pid)
+    const player = players.find(({ uid }) => uid === pid)
     const act = actions[action]
     if (act instanceof Function) {
       this.state = act(state, player, params)
