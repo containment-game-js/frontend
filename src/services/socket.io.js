@@ -1,8 +1,8 @@
 import io from 'socket.io-client'
-import { connectionURL } from '@/services/backend'
+import { socketURL } from '@/services/backend'
 
 const connect = () => {
-  const url = connectionURL()
+  const url = socketURL()
   const socket = io(url)
   return socket
 }

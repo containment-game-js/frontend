@@ -44,7 +44,11 @@
     <card pad-y>
       <card-header>{{ $t('preparation.title.players') }}</card-header>
       <card-content>
-        <span v-for="player in roomInfo.players" :key="player.id" class="s-pad">
+        <span
+          v-for="player in roomInfo.players"
+          :key="player.uid"
+          class="s-pad"
+        >
           <span class="s-mar-y code-inline">
             {{ player.name }}
             <font-awesome-icon
@@ -70,8 +74,8 @@
           >
             <option
               v-for="player in redPlayers"
-              :key="player.id"
-              :value="player.id"
+              :key="player.uid"
+              :value="player.uid"
             >
               {{ player.name }}
             </option>
@@ -88,8 +92,8 @@
           >
             <option
               v-for="player in bluePlayers"
-              :key="player.id"
-              :value="player.id"
+              :key="player.uid"
+              :value="player.uid"
             >
               {{ player.name }}
             </option>
@@ -117,7 +121,7 @@
               <div
                 class="player-name"
                 v-for="player in redPlayers"
-                :key="player.id"
+                :key="player.uid"
               >
                 {{ player.name }}
               </div>
@@ -128,7 +132,7 @@
               <div
                 class="player-name"
                 v-for="player in neutralPlayers"
-                :key="player.id"
+                :key="player.uid"
               >
                 {{ player.name }}
               </div>
@@ -140,7 +144,7 @@
               <div
                 class="player-name"
                 v-for="player in bluePlayers"
-                :key="player.id"
+                :key="player.uid"
               >
                 {{ player.name }}
               </div>
@@ -215,7 +219,7 @@ export default {
       this.$store.dispatch('closeRoom')
     },
     kickUser(player) {
-      this.$store.dispatch('kickUser', player.id)
+      this.$store.dispatch('kickUser', player.uid)
     },
     updateSpy(pid, team) {
       this.$store.dispatch('updateSpy', { team, pid })
@@ -239,7 +243,7 @@ export default {
         return this.$t('preparation.info.you')
       } else {
         const { host, players } = this.roomInfo
-        const player = players.find(({ id }) => id === host)
+        const player = players.find(({ uid }) => uid === host)
         if (player) {
           return player.name
         } else {
@@ -255,7 +259,7 @@ export default {
     },
     redSpy() {
       const { spies, roomInfo } = this
-      const player = roomInfo.players.find(({ id }) => id === spies.red)
+      const player = roomInfo.players.find(({ uid }) => uid === spies.red)
       if (player) {
         return player.name
       } else {
@@ -264,7 +268,7 @@ export default {
     },
     blueSpy() {
       const { spies, roomInfo } = this
-      const player = roomInfo.players.find(({ id }) => id === spies.blue)
+      const player = roomInfo.players.find(({ uid }) => uid === spies.blue)
       if (player) {
         return player.name
       } else {
@@ -273,19 +277,19 @@ export default {
     },
     bluePlayers() {
       return this.roomInfo.players.filter(player =>
-        this.teams.blue.includes(player.id)
+        this.teams.blue.includes(player.uid)
       )
     },
     redPlayers() {
       return this.roomInfo.players.filter(player =>
-        this.teams.red.includes(player.id)
+        this.teams.red.includes(player.uid)
       )
     },
     neutralPlayers() {
       return this.roomInfo.players.filter(
         player =>
-          !this.teams.blue.includes(player.id) &&
-          !this.teams.red.includes(player.id)
+          !this.teams.blue.includes(player.uid) &&
+          !this.teams.red.includes(player.uid)
       )
     },
     isLaunchable() {
